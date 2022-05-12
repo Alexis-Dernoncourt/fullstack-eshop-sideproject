@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './store';
+import baseUrl from '../utils/axiosConfig';
 
 // type User = {
 //     userId: string;
@@ -79,26 +80,18 @@ export const accessAdminZone = createAsyncThunk(
     '/admin/accessAdminZone',
     async (data: string) => {
         try {
-            const response = await fetch(`http://localhost:3000/api/admin`, {
+            const response = await baseUrl.get(`/admin`, {
                 headers: {
+                    Accept: 'application/json',
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${data}`,
                 },
-                credentials: 'include',
-                method: 'GET',
+                withCredentials: true,
             });
-            const res: any = await response.json();
-
-            if (!response?.ok) {
-                const error =
-                    (res && res.message && res.message) || response.statusText;
-                return Promise.reject(error);
-            } else {
-                return res;
-            }
+            if (response && response.data) return response.data;
         } catch (error: any) {
-            console.log(error);
-            return error;
+            console.error(error.message);
+            return Promise.reject(error.response.data.message);
         }
     }
 );

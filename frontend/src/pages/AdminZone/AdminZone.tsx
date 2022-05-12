@@ -1,12 +1,14 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Container } from './AdminZone.style';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { accessAdminZone, adminDataFromSlice } from '../../redux/adminSlice';
 import { AdminData, User } from '../../typescript/types';
 import AdminProductList from '../../components/AdminProductList/AdminProductList';
+import toast from 'react-hot-toast';
 
 const AdminZone = () => {
     const dispatch = useAppDispatch();
+    const [text, setText] = useState('');
 
     const user: {
         userData: User;
@@ -22,21 +24,21 @@ const AdminZone = () => {
     const getAdminData = async () => {
         try {
             const data = token;
-            const result = await dispatch(accessAdminZone(data));
+            const result: any = await dispatch(accessAdminZone(data));
             if (
-                result.meta.requestStatus !== 'rejected' &&
-                result.type !== '/admin/accessAdminZone/rejected'
+                result.meta.requestStatus === 'fulfilled' &&
+                result.type === '/admin/accessAdminZone/fulfilled'
             ) {
-                //setText(result.payload.message);
+                setText(result.payload.message);
             } else if (
                 result.meta.requestStatus === 'rejected' &&
                 result.type === '/admin/accessAdminZone/rejected'
             ) {
-                const errorMessage = `Il y a eu une erreur...`;
+                const errorMessage = result.error.message;
                 throw new Error(errorMessage);
             }
         } catch (err: any) {
-            console.log('erreur..', err);
+            toast.error(`${err}`);
         }
     };
 
@@ -51,10 +53,15 @@ const AdminZone = () => {
                 style={{
                     fontSize: '2rem',
                     color: 'var(--red)',
-                    margin: '2rem 0',
+                    margin: '2rem 0 1rem',
                 }}
             >
                 {adminData.status === 'loading' && <p>Chargement...</p>}
+                {text && (
+                    <p
+                        style={{ textAlign: 'center', color: 'var(--blue)' }}
+                    >{`${text}`}</p>
+                )}
             </div>
             <div>
                 <AdminProductList />

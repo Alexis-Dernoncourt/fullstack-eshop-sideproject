@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './store';
+import baseUrl from '../utils/axiosConfig';
 
 type User = {
     userId: string;
@@ -81,26 +82,19 @@ export const registerUser = createAsyncThunk(
     '/auth/register',
     async (data: { email: string; password: string }) => {
         try {
-            const response = await fetch(
-                `http://localhost:3000/api/auth/signup`,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    method: 'POST',
-                    body: JSON.stringify(data),
-                }
-            );
-            const res = (await response.json()) as ResponseType;
-            if (!response?.ok) {
-                const error = (res && res.message) || response.status;
-                return Promise.reject(error);
-            } else {
-                return res;
-            }
-        } catch (error: any) {
-            console.log(error);
-            return error;
+            const response = await baseUrl(`/auth/signup`, {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+                data,
+            });
+            if (response && response.data) return response.data;
+        } catch (err: any) {
+            console.log(err);
+            console.error(err.message);
+            return Promise.reject(err.response.data.message);
         }
     }
 );
@@ -109,53 +103,38 @@ export const loginUser = createAsyncThunk(
     '/auth/login',
     async (data: { email: string; password: string }) => {
         try {
-            const response = await fetch(
-                `http://localhost:3000/api/auth/login`,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
-                    method: 'POST',
-                    body: JSON.stringify(data),
-                }
-            );
-            const res = (await response.json()) as ResponseType;
-
-            if (!response?.ok) {
-                const error =
-                    res.message || 'Il y a eu une erreur, veuillez réessayer.';
-                console.log(res);
-                return Promise.reject(error);
-            } else {
-                return res;
-            }
+            const response = await baseUrl(`/auth/login`, {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+                data,
+            });
+            if (response && response.data) return response.data;
         } catch (err: any) {
             console.log(err);
-            return err;
+            console.error(err.message);
+            return Promise.reject(err.response.data.message);
         }
     }
 );
 
 export const logoutUser = createAsyncThunk('/auth/logout', async () => {
     try {
-        const response = await fetch(`http://localhost:3000/api/auth/logout`, {
+        const response = await baseUrl(`/auth/logout`, {
             headers: {
+                Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            credentials: 'include',
+            withCredentials: true,
             method: 'POST',
         });
-        const res = (await response.json()) as ResponseType;
-        if (!response?.ok) {
-            const error = (res && res.message) || response.status;
-            return Promise.reject(error);
-        } else {
-            return res;
-        }
-    } catch (error: any) {
-        console.log(error);
-        return error;
+        if (response && response.data) return response.data;
+    } catch (err: any) {
+        console.log(err);
+        console.error(err.message);
+        return Promise.reject(err.response.data.message);
     }
 });
 
@@ -176,29 +155,21 @@ export const updateAdress = createAsyncThunk(
         try {
             const { token, ...formData } = data;
 
-            const response = await fetch(
-                `http://localhost:3000/api/auth/update-adress`,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                    credentials: 'include',
-                    method: 'POST',
-                    body: JSON.stringify(formData),
-                }
-            );
-            const res = (await response.json()) as ResponseType;
-
-            if (!response?.ok) {
-                const error = (res && res.message) || response.status;
-                return Promise.reject(error);
-            } else {
-                return res;
-            }
-        } catch (error: any) {
-            console.log(error);
-            return error;
+            const response = await baseUrl(`/auth/update-adress`, {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                withCredentials: true,
+                method: 'POST',
+                data: formData,
+            });
+            if (response && response.data) return response.data;
+        } catch (err: any) {
+            console.log(err);
+            console.error(err.message);
+            return Promise.reject(err.response.data.message);
         }
     }
 );
@@ -216,28 +187,24 @@ export const updatePassword = createAsyncThunk(
                 password: data.password,
                 passwordUpdate: data.passwordUpdate,
             };
-            const response = await fetch(
-                `http://localhost:3000/api/auth/modify-password/${data.userId}`,
+            const response = await baseUrl(
+                `/auth/modify-password/${data.userId}`,
                 {
                     headers: {
+                        Accept: 'application/json',
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${data.token}`,
                     },
-                    credentials: 'include',
+                    withCredentials: true,
                     method: 'POST',
-                    body: JSON.stringify(formData),
+                    data: formData,
                 }
             );
-            const res = (await response.json()) as ResponseType;
-            if (!response?.ok) {
-                const error = (res && res.message) || response.status;
-                return Promise.reject(error);
-            } else {
-                return res;
-            }
-        } catch (error: any) {
-            console.log(error);
-            return error;
+            if (response && response.data) return response.data;
+        } catch (err: any) {
+            console.log(err);
+            console.error(err.message);
+            return Promise.reject(err.response.data.message);
         }
     }
 );
@@ -246,50 +213,41 @@ export const confirmUserEmail = createAsyncThunk(
     '/user/confirm-email',
     async (data: { userId: string; username: string }) => {
         try {
-            const response = await fetch(
-                `http://localhost:3000/api/auth/confirm-email/${data.userId}/${data.username}`,
+            const response = await baseUrl(
+                `/auth/confirm-email/${data.userId}/${data.username}`,
                 {
                     headers: {
+                        Accept: 'application/json',
                         'Content-Type': 'application/json',
                     },
-                    credentials: 'include',
+                    withCredentials: true,
                     method: 'GET',
                 }
             );
-            const res = (await response.json()) as ResponseType;
-            if (!response?.ok) {
-                const error = (res && res.message) || response.status;
-                return Promise.reject(error);
-            } else {
-                return res;
-            }
-        } catch (error: any) {
-            console.log(error);
-            return error;
+            if (response && response.data) return response.data;
+        } catch (err: any) {
+            console.log(err);
+            console.error(err.message);
+            return Promise.reject(err.response.data.message);
         }
     }
 );
 
 export const getRefreshToken = createAsyncThunk('/auth/refresh', async () => {
     try {
-        const response = await fetch(`http://localhost:3000/api/auth/refresh`, {
+        const response = await baseUrl(`/auth/refresh`, {
             headers: {
+                Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            credentials: 'include',
+            withCredentials: true,
             method: 'GET',
         });
-        const res: { accessToken?: string; message?: string } =
-            await response.json();
-        if (!response.ok) {
-            const error = (res && res.message) || response.status;
-            return Promise.reject(error);
-        } else {
-            return res;
-        }
-    } catch (error) {
-        console.log('Error RefreshToken=>', error);
-        return error;
+        if (response && response.data) return response.data;
+    } catch (err: any) {
+        console.log(err);
+        console.error(err.message);
+        return Promise.reject(err.response.data.message);
     }
 });
 

@@ -50,12 +50,11 @@ const Login = () => {
                     toast.success(`${result.payload.message}`);
                     navigate('/dashboard');
                 } else {
-                    console.log(result.error.message);
                     const errorMessage = `${result.error.message}`;
                     throw new Error(errorMessage);
                 }
             } catch (err: any) {
-                console.log('erreur..', err);
+                console.log(err);
                 toast.error(`${err.message}`);
             }
         }
