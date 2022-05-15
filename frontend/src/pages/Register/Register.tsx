@@ -44,14 +44,17 @@ const Register = () => {
             try {
                 const result = await dispatch(registerUser(data));
                 if (
-                    result.meta.requestStatus !== 'rejected' &&
-                    result.type !== '/auth/login/rejected'
+                    result.meta.requestStatus === 'fulfilled' &&
+                    result.type === '/auth/register/fulfilled'
                 ) {
                     toast.success(
                         `${result.payload.message}. Vous pouvez vous connecter.`
                     );
                     navigate('/login');
-                } else {
+                } else if (
+                    result.meta.requestStatus === 'rejected' &&
+                    result.type === '/auth/register/rejected'
+                ) {
                     const errorMessage = `Il y a eu une erreur...`;
                     throw new Error(errorMessage);
                 }

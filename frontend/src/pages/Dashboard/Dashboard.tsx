@@ -38,7 +38,10 @@ const Dashboard = () => {
                     dispatch(MadeCartLoading());
                     dispatch(deleteCartData());
                     persistor.purge();
-                    toast.success(`${logout.payload.message}`);
+                    const message =
+                        logout.payload?.message ||
+                        'Vous vous êtes déconnecté !';
+                    toast.success(message);
                     navigate('/');
                 } else {
                     const errorMessage = `Il y a eu une erreur, veuillez réessayer.`;

@@ -7,8 +7,8 @@ require('../config/sendinblueConfig');
 
 
 exports.signup = async (req, res) => {
-  const pwd = req.body.password.trim();
-  const mail = req.body.email.trim();
+  const pwd = req.body.data.password.trim();
+  const mail = req.body.data.email.trim();
   if (pwd && mail && match.regex.passwordCheck.test(pwd) && match.regex.mailCheck.test(mail)) {
     const username = mail.split('@')[0];
     const hashedPwd = await bcrypt.hash(pwd, 10);

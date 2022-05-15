@@ -32,24 +32,24 @@ type userState = {
     error?: boolean;
 };
 
-type ResponseType = {
-    message?: string;
-    user?: User;
-    txt?: string;
-    accessToken?: string;
-    userId?: string;
-    email?: string;
-    adress?: {
-        firstName: string;
-        lastName: string;
-        postalCode: string;
-        street: string;
-        adressComplement: string;
-        streetNumber: string;
-        appartment: false;
-        etage: false | string;
-    };
-};
+// type ResponseType = {
+//     message?: string;
+//     user?: User;
+//     txt?: string;
+//     accessToken?: string;
+//     userId?: string;
+//     email?: string;
+//     adress?: {
+//         firstName: string;
+//         lastName: string;
+//         postalCode: string;
+//         street: string;
+//         adressComplement: string;
+//         streetNumber: string;
+//         appartment: false;
+//         etage: false | string;
+//     };
+// };
 
 interface ActionType {
     payload: object;
@@ -82,14 +82,16 @@ export const registerUser = createAsyncThunk(
     '/auth/register',
     async (data: { email: string; password: string }) => {
         try {
-            const response = await baseUrl(`/auth/signup`, {
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                method: 'POST',
-                data,
-            });
+            const response = await baseUrl.post(
+                `/auth/signup`,
+                { data },
+                {
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
             if (response && response.data) return response.data;
         } catch (err: any) {
             console.log(err);
@@ -108,6 +110,7 @@ export const loginUser = createAsyncThunk(
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
+                withCredentials: true,
                 method: 'POST',
                 data,
             });
@@ -134,7 +137,7 @@ export const logoutUser = createAsyncThunk('/auth/logout', async () => {
     } catch (err: any) {
         console.log(err);
         console.error(err.message);
-        return Promise.reject(err.response.data.message);
+        return Promise.reject(err.response.data.message || 'Erreur...');
     }
 });
 
@@ -264,7 +267,7 @@ export const userSlice = createSlice({
         });
         builder.addCase(
             registerUser.fulfilled,
-            (state, action: PayloadAction<userState>) => {
+            (state, action: PayloadAction<{ message: string }>) => {
                 state.pending = false;
                 state.status = 'succeeded';
                 state.message = action.payload.message;
@@ -313,7 +316,8 @@ export const userSlice = createSlice({
             (state, action: PayloadAction<ActionTypePayload>) => {
                 state.pending = false;
                 state.status = 'succeeded';
-                state.message = action.payload.message;
+                state.message =
+                    action.payload?.message || 'Vous vous êtes déconnecté.';
                 state.userData = initialState.userData;
                 state.authenticated = false;
             }
