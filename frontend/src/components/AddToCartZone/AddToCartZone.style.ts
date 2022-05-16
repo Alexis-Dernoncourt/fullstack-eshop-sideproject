@@ -8,7 +8,8 @@ export const FormContainer = styled.form`
     justify-content: center;
     gap: 2rem;
     flex-wrap: wrap;
-    width: 70%;
+    flex: 1 0;
+    width: 100%;
 `;
 
 export const InputContainer = styled.div`
@@ -22,7 +23,7 @@ export const SelectInput = styled.select`
     background-color: var(--white);
     border: solid 0.1rem var(--gray);
     border-radius: 0.4rem;
-    margin: 0 1.5rem;
+    margin: 0 1rem;
     &:hover {
         cursor: pointer;
     }

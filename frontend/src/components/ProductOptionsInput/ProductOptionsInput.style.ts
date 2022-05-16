@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { mobile } from '../../styles/responsive';
 
 interface IPage {
     page: string;
@@ -7,6 +8,9 @@ interface IPage {
 export const InputContainer = styled.div`
     width: max-content;
     position: relative;
+    ${mobile({
+        margin: '1.5rem 0',
+    })};
 `;
 
 export const SelectInput = styled.select<IPage>`
@@ -23,6 +27,9 @@ export const SelectInput = styled.select<IPage>`
         border-color: var(--red);
         border-width: 0.2rem;
     }
+    ${mobile({
+        fontSize: 'var(--fz-sm)',
+    })};
 `;
 
 export const ErrorMsg = styled.small`
@@ -36,8 +43,11 @@ export const ErrorMsg = styled.small`
 `;
 
 export const SelectOption = styled.option`
-    font-size: 2rem;
+    font-size: var(--fz-md);
     &:hover {
         cursor: pointer;
     }
+    ${mobile({
+        fontSize: 'var(--fz-sm)',
+    })};
 `;

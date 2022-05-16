@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { mobile } from '../../styles/responsive';
 
 interface IPage {
     page: string;
@@ -9,6 +10,9 @@ export const QuantityContainer = styled.div<IPage>`
     align-items: center;
     height: 4rem;
     ${(props) => (props.page === 'cart' ? 'margin: 0' : 'margin: 3rem 5rem')};
+    ${mobile({
+        margin: '1.5rem 3rem',
+    })};
 `;
 
 export const QtyInput = styled.input`
@@ -18,6 +22,9 @@ export const QtyInput = styled.input`
     margin: 0.5rem 0;
     width: 7rem;
     height: 100%;
+    ${mobile({
+        fontSize: 'var(--fz-md)',
+    })};
 `;
 
 export const QtyButton = styled.button`

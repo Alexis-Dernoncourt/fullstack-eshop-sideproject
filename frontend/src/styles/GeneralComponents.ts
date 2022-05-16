@@ -1,6 +1,12 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { MinWidth1400px, mobile, tablet } from './responsive';
+import {
+    MaxWidth600px,
+    MinWidth950px,
+    mobile,
+    tablet,
+    WidthBetween495px800px,
+} from './responsive';
 
 export const LogoLink = styled(Link)`
     width: fit-content;
@@ -79,10 +85,10 @@ export const FlexDiv = styled.div`
     align-items: center;
     justify-content: space-evenly;
     width: 100%;
+    flex-wrap: wrap;
 `;
 
 export const TitleH2 = styled.h2`
-    font-size: 3vw;
     margin: 7rem auto 3rem;
     padding: 0 1rem;
     text-transform: uppercase;
@@ -104,8 +110,13 @@ export const TitleH2 = styled.h2`
         ${tablet({ height: '50%' })};
         ${mobile({ opacity: '0' })};
     }
+    ${tablet({ fontSize: '2.7vw' })};
     ${mobile({ fontSize: '2rem', width: 'auto', padding: '1rem' })};
-    ${MinWidth1400px({ fontSize: '3rem' })};
+    ${WidthBetween495px800px({ fontSize: '2.2rem' })};
+    ${MinWidth950px({ fontSize: '2.7rem' })};
+    ${MaxWidth600px({
+        margin: '2rem auto 1rem',
+    })};
 `;
 
 export const Button = styled.button`
