@@ -13,9 +13,11 @@ const ConfirmEmail = () => {
     const data: {
         userId: string;
         username: string;
+        token: string;
     } = {
         userId: user.userId,
         username: user.username,
+        token: user.accessToken,
     };
 
     const validateEmail = async () => {
@@ -32,7 +34,11 @@ const ConfirmEmail = () => {
                 const errorMessage = `${validEmail}`;
                 throw new Error(errorMessage);
             }
-        } catch (error) {}
+        } catch (error) {
+            console.log(error);
+
+            //toast.error(`${error.data.payload.message}`);
+        }
     };
 
     useEffect(() => {

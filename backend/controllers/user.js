@@ -146,7 +146,8 @@ exports.confirmEmail = async (req, res) => {
       const userId = req.params.id;
       const userName = req.params.username;
       const userToConfirm = await User.findById(userId);
-      if (userToConfirm && userToConfirm.username === userName) {
+      if (userToConfirm && userToConfirm.username === userName && userId === req.userId) {
+        if (userToConfirm.validatedAccount) return res.status(403).json({ message: 'Vous ne pouvez pas effectuer cette action car vous avez déjà validé votre adresse mail.'});
         const updatedUser = await User.findByIdAndUpdate(userId, { validatedAccount: true });
         
         res.status(200).json({
@@ -174,6 +175,7 @@ exports.modifyPassword = async (req, res) => {
 
     if (req?.params && req?.params?.id && oldPwd && match.regex.passwordCheck.test(oldPwd) && newPwd && match.regex.passwordCheck.test(newPwd)) {
       const userToConfirm = await User.findById(req.params.id);
+      if (!userToConfirm.validatedAccount) return res.status(403).json({ message: 'Vous ne pouvez pas effectuer cette action car vous n\'avez pas validé votre adresse mail.'});
       if (userToConfirm && userToConfirm._id.toString() === req.userId && userToConfirm._id.toString() === req.params.id) {
         const validPwd = await bcrypt.compare(oldPwd, userToConfirm.password);
         if (validPwd) {
@@ -215,6 +217,7 @@ exports.updateAdress = async (req, res) => {
     if (firstName && lastName && postalCode && city && streetNumber && street && match.regex.noSpecialChars.test(firstName) && match.regex.noSpecialChars.test(lastName) && match.regex.noSpecialChars.test(city) && match.regex.noSpecialChars.test(street) && match.regex.noSpecialChars.test(streetNumber) && match.regex.postalCode.test(postalCode)) {
       const userToUpdate = await User.findById(req.userId);
       if (userToUpdate) {
+        if (!userToUpdate.validatedAccount) return res.status(403).json({ message: 'Vous ne pouvez pas effectuer cette action car vous n\'avez pas validé votre adresse mail.'});
         const adress = {firstName, lastName, postalCode, city, streetNumber, street, adressComplement, appartment, etage};
           const newAdress = await User.findByIdAndUpdate(userToUpdate._id, {adress: adress});
           if (!newAdress) return res.status(400).json({ message: `Il y a eu une erreur, veuillez réessayer.` });

@@ -57,20 +57,23 @@ const PasswordUpdateForm = () => {
                     ...data,
                     token: user.accessToken,
                 };
-                const result = await dispatch(updatePassword(dataToSend));
+                const result: any = await dispatch(updatePassword(dataToSend));
                 if (
-                    result.meta.requestStatus !== 'rejected' &&
-                    result.type !== '/user/updatePassword/rejected'
+                    result.meta.requestStatus === 'fulfilled' &&
+                    result.type === '/user/updatePassword/fulfilled'
                 ) {
                     toast.success(`${result.payload.message}`);
                     navigate('/dashboard');
-                } else {
-                    const errorMessage = `Il y a eu une erreur...`;
-                    throw new Error(errorMessage);
+                } else if (
+                    result.meta.requestStatus === 'rejected' &&
+                    result.type === '/user/updatePassword/rejected'
+                ) {
+                    const { message } = result.error;
+                    throw new Error(message);
                 }
             } catch (err: any) {
                 console.log('erreur..', err);
-                toast.error(`${err.message}`);
+                toast.error(`${err}`);
             }
         }
     };

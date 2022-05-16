@@ -94,8 +94,6 @@ export const registerUser = createAsyncThunk(
             );
             if (response && response.data) return response.data;
         } catch (err: any) {
-            console.log(err);
-            console.error(err.message);
             return Promise.reject(err.response.data.message);
         }
     }
@@ -116,8 +114,6 @@ export const loginUser = createAsyncThunk(
             });
             if (response && response.data) return response.data;
         } catch (err: any) {
-            console.log(err);
-            console.error(err.message);
             return Promise.reject(err.response.data.message);
         }
     }
@@ -135,8 +131,6 @@ export const logoutUser = createAsyncThunk('/auth/logout', async () => {
         });
         if (response && response.data) return response.data;
     } catch (err: any) {
-        console.log(err);
-        console.error(err.message);
         return Promise.reject(err.response.data.message || 'Erreur...');
     }
 });
@@ -170,8 +164,6 @@ export const updateAdress = createAsyncThunk(
             });
             if (response && response.data) return response.data;
         } catch (err: any) {
-            console.log(err);
-            console.error(err.message);
             return Promise.reject(err.response.data.message);
         }
     }
@@ -205,8 +197,6 @@ export const updatePassword = createAsyncThunk(
             );
             if (response && response.data) return response.data;
         } catch (err: any) {
-            console.log(err);
-            console.error(err.message);
             return Promise.reject(err.response.data.message);
         }
     }
@@ -214,7 +204,7 @@ export const updatePassword = createAsyncThunk(
 
 export const confirmUserEmail = createAsyncThunk(
     '/user/confirm-email',
-    async (data: { userId: string; username: string }) => {
+    async (data: { userId: string; username: string; token: string }) => {
         try {
             const response = await baseUrl(
                 `/auth/confirm-email/${data.userId}/${data.username}`,
@@ -222,6 +212,7 @@ export const confirmUserEmail = createAsyncThunk(
                     headers: {
                         Accept: 'application/json',
                         'Content-Type': 'application/json',
+                        Authorization: `Bearer ${data.token}`,
                     },
                     withCredentials: true,
                     method: 'GET',
@@ -229,8 +220,6 @@ export const confirmUserEmail = createAsyncThunk(
             );
             if (response && response.data) return response.data;
         } catch (err: any) {
-            console.log(err);
-            console.error(err.message);
             return Promise.reject(err.response.data.message);
         }
     }
@@ -248,8 +237,6 @@ export const getRefreshToken = createAsyncThunk('/auth/refresh', async () => {
         });
         if (response && response.data) return response.data;
     } catch (err: any) {
-        console.log(err);
-        console.error(err.message);
         return Promise.reject(err.response.data.message);
     }
 });
@@ -298,7 +285,6 @@ export const userSlice = createSlice({
             }
         );
         builder.addCase(loginUser.rejected, (state, action) => {
-            console.log(action);
             state.pending = null;
             state.status = 'failed';
             state.error = true;
@@ -367,8 +353,6 @@ export const userSlice = createSlice({
             (state, action: PayloadAction<ActionTypePayload>) => {
                 state.pending = false;
                 state.status = 'succeeded';
-                console.log(action.payload);
-
                 state.message = action.payload.message;
             }
         );

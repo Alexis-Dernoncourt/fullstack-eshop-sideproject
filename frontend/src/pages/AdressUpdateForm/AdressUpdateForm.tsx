@@ -68,21 +68,24 @@ const AdressUpdateForm = () => {
                 ...data,
                 token: user.accessToken,
             };
-            const result = await dispatch(updateAdress(dataToSend));
+            const result: any = await dispatch(updateAdress(dataToSend));
+            console.log(result);
             if (
-                result.meta.requestStatus !== 'rejected' &&
-                result.type !== '/user/updatePassword/rejected'
+                result.meta.requestStatus === 'fulfilled' &&
+                result.type === '/user/updateAdress/fulfilled'
             ) {
                 toast.success(`${result.payload.message}`);
                 reset();
                 navigate('/dashboard');
-            } else {
-                const errorMessage = `Il y a eu une erreur...`;
-                throw new Error(errorMessage);
+            } else if (
+                result.meta.requestStatus === 'rejected' &&
+                result.type === '/user/updateAdress/rejected'
+            ) {
+                const { message } = result.error;
+                throw new Error(message);
             }
         } catch (err: any) {
-            console.log('erreur..', err);
-            toast.error(`${err.message}`);
+            toast.error(`${err}`);
         }
     };
 
