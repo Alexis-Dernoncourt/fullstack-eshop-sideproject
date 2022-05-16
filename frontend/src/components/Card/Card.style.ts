@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { mobile, tablet } from '../../styles/responsive';
 
 interface ITooltip {
     productInfo: string;
@@ -54,6 +55,8 @@ export const PriceItem = styled.div`
     font-weight: bold;
     background-color: var(--black);
     padding: 1rem 0;
+    ${tablet({ fontSize: 'var(--fz-xl)' })};
+    ${mobile({ fontSize: 'var(--fz-md)' })};
 `;
 
 export const CardHead = styled.div<IPage>`
@@ -68,6 +71,12 @@ export const CardHead = styled.div<IPage>`
     text-align: center;
     padding: ${(props) =>
         props.page === 'home' ? '2rem 2rem 1rem' : '0.7rem 0.7rem'};
+    ${tablet({ fontSize: 'var(--fz-md)' })};
+    ${mobile({
+        fontSize: 'var(--fz-md)',
+        padding: '1.5rem 2rem 1rem',
+        height: 'max-content',
+    })};
 `;
 
 export const CardImg = styled.img<IPage>`

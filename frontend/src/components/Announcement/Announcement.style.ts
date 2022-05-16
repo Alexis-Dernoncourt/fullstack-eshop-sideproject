@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-//import { Link } from 'react-router-dom'
+import { mobile, tablet } from '../../styles/responsive';
 
 export const Container = styled.div`
     display: flex;
@@ -12,4 +12,16 @@ export const Container = styled.div`
     background-color: var(--blue);
     color: var(--white);
     font-size: var(--fz-md);
+    ${tablet({
+        fontSize: '1.4rem',
+        height: 'auto',
+        padding: '0.5rem 1rem',
+        textAlign: 'center',
+    })};
+    ${mobile({
+        fontSize: '1.2rem',
+        height: 'auto',
+        padding: '0.5rem 1rem',
+        textAlign: 'center',
+    })};
 `;

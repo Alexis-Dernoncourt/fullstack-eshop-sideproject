@@ -71,7 +71,7 @@ const PasswordUpdateForm = () => {
                     const { message } = result.error;
                     throw new Error(message);
                 }
-            } catch (err: any) {
+            } catch (err) {
                 console.log('erreur..', err);
                 toast.error(`${err}`);
             }

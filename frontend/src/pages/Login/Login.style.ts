@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { MinWidth950px, mobile, tablet } from '../../styles/responsive';
 
 export const Container = styled.div`
     margin: 5rem auto;
@@ -22,10 +23,13 @@ export const Form = styled.form`
     flex-direction: column;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.05);
-    width: 30%;
+    max-width: 600px;
     height: max-content;
     padding: 4rem;
     border-radius: 0.4rem;
+    ${tablet({ width: '60%' })};
+    ${mobile({ width: '100%' })};
+    ${MinWidth950px({ width: '50%' })};
 `;
 
 export const Input = styled.input`
@@ -51,6 +55,8 @@ export const Label = styled.label`
 export const ErrorSpan = styled.span`
     color: var(--red);
     margin-top: -2rem;
+    ${tablet({ fontSize: 'var(--fz-sm)' })};
+    ${mobile({ fontSize: 'var(--fz-xs)' })};
 `;
 
 export const FormBtn = styled.button`
@@ -80,4 +86,6 @@ export const RegisterLink = styled(Link)`
     font-weight: 700;
     width: max-content;
     margin: 3rem auto 0;
+    ${tablet({ fontSize: 'var(--fz-sm)' })};
+    ${mobile({ fontSize: 'var(--fz-xs)' })};
 `;

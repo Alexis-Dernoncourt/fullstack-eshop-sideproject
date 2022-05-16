@@ -84,7 +84,7 @@ const AdressUpdateForm = () => {
                 const { message } = result.error;
                 throw new Error(message);
             }
-        } catch (err: any) {
+        } catch (err) {
             toast.error(`${err}`);
         }
     };

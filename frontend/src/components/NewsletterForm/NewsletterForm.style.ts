@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { MinWidth1400px, mobile, tablet } from '../../styles/responsive';
 
 export const NewsletterContainer = styled.div`
     display: flex;
@@ -8,16 +9,18 @@ export const NewsletterContainer = styled.div`
     height: min-content;
     width: 100%;
     margin: 10rem 0;
+    ${mobile({ margin: '5rem auto 5rem' })};
 `;
 
 export const Form = styled.form`
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 50%;
+    min-width: 70vw;
     height: max-content;
     padding: 0 4rem 4rem;
     border-radius: 0.4rem;
+    ${mobile({ width: '100%' })};
 `;
 
 export const Input = styled.input`
@@ -34,6 +37,8 @@ export const Input = styled.input`
         border-color: var(--red);
         border-width: 0.2rem;
     }
+    ${MinWidth1400px({ width: '650px' })};
+    ${tablet({ width: '100%' })};
 `;
 
 export const ErrorSpan = styled.span`

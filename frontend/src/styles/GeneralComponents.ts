@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { MinWidth1400px, mobile, tablet } from './responsive';
 
 export const LogoLink = styled(Link)`
     width: fit-content;
@@ -22,6 +23,7 @@ export const MenuContainer = styled.div`
     width: max-content;
     height: max-content;
     z-index: 2;
+    ${mobile({ padding: '0 0.5rem' })};
 `;
 
 export const MenuBtnContainer = styled.button`
@@ -30,13 +32,17 @@ export const MenuBtnContainer = styled.button`
     color: var(--gray);
     font-size: var(--fz-xl);
     cursor: pointer;
+    ${tablet({ fontSize: '1.8rem' })};
+    ${mobile({ fontSize: '1.4rem' })};
 `;
 
 export const CartContainer = styled(Link)`
     color: var(--gray);
-    align-self: flex-start;
+    align-self: center;
     position: relative;
     margin: 0 5rem;
+    ${tablet({ fontSize: '1.8rem' })};
+    ${mobile({ fontSize: '1.4rem' })};
 `;
 
 export const CartTooltip = styled.span`
@@ -53,6 +59,19 @@ export const CartTooltip = styled.span`
     position: absolute;
     top: -1rem;
     right: -1.7rem;
+    ${tablet({
+        fontSize: '1.2rem',
+        width: '2rem',
+        height: '2rem',
+        right: '-1.2rem',
+    })};
+    ${mobile({
+        fontSize: '1rem',
+        width: '1.5rem',
+        height: '1.5rem',
+        top: '-0.7rem',
+        right: '-1rem',
+    })};
 `;
 
 export const FlexDiv = styled.div`
@@ -63,12 +82,13 @@ export const FlexDiv = styled.div`
 `;
 
 export const TitleH2 = styled.h2`
-    font-size: 3rem;
+    font-size: 3vw;
     margin: 7rem auto 3rem;
     padding: 0 1rem;
     text-transform: uppercase;
     position: relative;
     width: max-content;
+    text-align: center;
     &::after {
         content: '';
         display: block;
@@ -81,7 +101,11 @@ export const TitleH2 = styled.h2`
         left: 0;
         z-index: -1;
         border-radius: 0.4rem;
+        ${tablet({ height: '50%' })};
+        ${mobile({ opacity: '0' })};
     }
+    ${mobile({ fontSize: '2rem', width: 'auto', padding: '1rem' })};
+    ${MinWidth1400px({ fontSize: '3rem' })};
 `;
 
 export const Button = styled.button`

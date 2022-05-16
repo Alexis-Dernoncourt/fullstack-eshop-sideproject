@@ -1,10 +1,13 @@
 import styled from 'styled-components';
+import { mobile, tablet } from '../../styles/responsive';
 
 export const Container = styled.div`
     height: 70vh;
     background-color: var(--blue);
     overflow: hidden;
     position: relative;
+    ${tablet({ height: '40vh' })};
+    ${mobile({ height: '30vh' })};
 `;
 
 export const ArrowContainer = styled.div`
@@ -24,6 +27,8 @@ export const ArrowContainer = styled.div`
     &:hover {
         background-color: rgba(0, 0, 0, 0.25);
     }
+    ${tablet({ width: '10%' })};
+    ${mobile({ width: '15%', color: '#ffffff6e' })};
 `;
 
 export const Wrapper = styled.div`
@@ -53,9 +58,13 @@ export const SliderText = styled.h3`
     padding: 1rem 3rem;
     border-radius: 0.4rem;
     transform: rotate(-2deg);
+    ${tablet({ fontSize: '2.4rem' })};
+    ${mobile({ fontSize: '1.8rem' })};
 `;
 
 export const Img = styled.img`
+    width: 100%;
+    height: 100%;
     flex: 3;
     object-fit: cover;
 `;
