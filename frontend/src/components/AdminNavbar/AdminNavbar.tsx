@@ -44,10 +44,10 @@ const AdminNavbar = () => {
 
     return (
         <Container>
-            <Title>Administration</Title>
+            <Title>Admin</Title>
             <LinksContainer>
                 <BtnContainer to="/admin/products/add">
-                    <span>Ajouter un article</span>
+                    <span>Ajouter</span>
                     <MdCreate
                         style={{
                             height: '1.5em',
@@ -57,7 +57,7 @@ const AdminNavbar = () => {
                     />
                 </BtnContainer>
                 <BtnContainer to="/admin">
-                    <span>Gérer les articles</span>
+                    <span>Gérer</span>
                     <MdSettings
                         style={{
                             height: '1.5em',
@@ -67,7 +67,7 @@ const AdminNavbar = () => {
                     />
                 </BtnContainer>
                 <BtnContainer to="/dashboard">
-                    <span>Aller vers dashboard</span>
+                    <span>Dashboard</span>
                     <RiAdminFill
                         style={{
                             height: '1.5em',
@@ -77,7 +77,7 @@ const AdminNavbar = () => {
                     />
                 </BtnContainer>
                 <BtnContainer to="#logout" onClick={(e) => handleLogout(e)}>
-                    <span>Se déconnecter</span>
+                    <span>Déconnexion</span>
                     <RiLogoutBoxRLine
                         style={{
                             height: '1.5em',

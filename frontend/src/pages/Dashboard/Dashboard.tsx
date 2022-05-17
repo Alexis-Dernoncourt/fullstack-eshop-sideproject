@@ -2,7 +2,11 @@ import {
     Container,
     ProfilInfosContainer,
     TitleContainer,
+    AdminInfo,
     InfosTitle,
+    TextZone,
+    AdressZone,
+    StyledLink,
 } from './Dashboard.style';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { selectUser, logoutUser } from '../../redux/userSlice';
@@ -55,7 +59,7 @@ const Dashboard = () => {
 
     return (
         <Container>
-            <ProfilInfosContainer>
+            <ProfilInfosContainer border="none">
                 <TitleContainer>
                     Bonjour{' '}
                     {userData && userData.adress?.firstName
@@ -67,29 +71,27 @@ const Dashboard = () => {
                     <Button onClick={handleLogout}>LOGOUT</Button>
                 ) : (
                     <>
-                        <p>Vous êtes ADMINISTRATEUR et/ou ÉDITEUR</p>
+                        <AdminInfo>
+                            Vous êtes ADMINISTRATEUR et/ou ÉDITEUR
+                        </AdminInfo>
                         <Button onClick={handleLogout}>LOGOUT</Button>
                     </>
                 )}
 
                 <InfosTitle>Vos informations :</InfosTitle>
-                <p>Votre email : {userData?.email}</p>
-                <Link
+                <TextZone danger="">Votre email : {userData?.email}</TextZone>
+                <StyledLink
+                    marginBottom={false}
                     to="/password-update"
                     className="link"
-                    style={{
-                        width: 'max-content',
-                        margin: '0 auto',
-                        color: 'var(--darkblue)',
-                    }}
                 >
                     Modifier votre mot-de-passe
-                </Link>
+                </StyledLink>
                 {!userData?.validatedAccount && (
                     <div>
-                        <p style={{ color: 'var(--red)', fontWeight: 'bold' }}>
+                        <TextZone danger="danger">
                             Vous devez valider votre compte pour continuer
-                        </p>
+                        </TextZone>
                         <Link to="/confirm-email">Confirmer votre email</Link>
                     </div>
                 )}
@@ -99,43 +101,40 @@ const Dashboard = () => {
                     userData.adress.postalCode &&
                     userData.adress.street &&
                     userData.adress.city && (
-                        <div
-                            style={{
-                                border: '0.1rem solid lightgrey',
-                                borderRadius: '1rem',
-                                padding: '1.5rem 2rem',
-                                margin: '2rem auto 0.5rem',
-                            }}
-                        >
+                        <AdressZone>
                             <h5>Votre adresse :</h5>
                             {userData.adress && (
                                 <>
-                                    <p>
+                                    <TextZone danger="">
                                         {`${userData.adress.firstName} ${userData.adress.lastName}`}
-                                    </p>
-                                    <p>{`${userData.adress.streetNumber} ${userData.adress.street}`}</p>
+                                    </TextZone>
+                                    <TextZone danger="">
+                                        {`${userData.adress.streetNumber} ${userData.adress.street}`}
+                                    </TextZone>
                                     {userData.adress.adressComplement && (
-                                        <p>
+                                        <TextZone danger="">
                                             {userData.adress.adressComplement}
-                                        </p>
+                                        </TextZone>
                                     )}
                                     {userData.adress.appartment && (
-                                        <p>Étage: {userData.adress.etage}</p>
+                                        <TextZone danger="">
+                                            Étage: {userData.adress.etage}
+                                        </TextZone>
                                     )}
-                                    <p>{userData.adress.postalCode}</p>
-                                    <p>{userData.adress.city}</p>
+                                    <TextZone danger="">
+                                        {userData.adress.postalCode}
+                                    </TextZone>
+                                    <TextZone danger="">
+                                        {userData.adress.city}
+                                    </TextZone>
                                 </>
                             )}
-                        </div>
+                        </AdressZone>
                     )}
-                <Link
+                <StyledLink
+                    marginBottom={true}
                     to="/update-adress"
                     className="link"
-                    style={{
-                        width: 'max-content',
-                        margin: '0 auto 2rem',
-                        color: 'var(--darkblue)',
-                    }}
                 >
                     {userData.adress &&
                     !userData.adress.firstName &&
@@ -145,11 +144,13 @@ const Dashboard = () => {
                     !userData.adress.city
                         ? 'Vous devez renseigner votre adresse pour commander..'
                         : 'Modifer votre adresse'}
-                </Link>
+                </StyledLink>
             </ProfilInfosContainer>
-            <ProfilInfosContainer style={{ borderLeft: '2px solid lightgray' }}>
+            <ProfilInfosContainer border="left">
                 <InfosTitle>Vos commandes :</InfosTitle>
-                <p>Vous n'avez pas effectué de commande pour le moment..</p>
+                <TextZone danger="">
+                    Vous n'avez pas effectué de commande pour le moment..
+                </TextZone>
             </ProfilInfosContainer>
         </Container>
     );

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { MaxWidth1150px, mobile, tablet } from '../../styles/responsive';
 
 export const Container = styled.div`
     display: flex;
@@ -20,12 +21,14 @@ export const Container = styled.div`
         position: absolute;
         bottom: 0;
     }
+    ${mobile({ height: '8rem' })};
 `;
 
 export const LinksContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    flex-wrap: wrap;
     background-color: black;
     text-align: center;
     width: 100%;
@@ -33,8 +36,9 @@ export const LinksContainer = styled.div`
 `;
 
 export const Title = styled.p`
-    font-size: 1.6rem;
+    font-size: var(--fz-md);
     margin: 0 2rem;
+    ${tablet({ display: 'none' })};
 `;
 
 export const BtnContainer = styled(Link)`
@@ -43,6 +47,13 @@ export const BtnContainer = styled(Link)`
     color: var(--white);
     text-transform: uppercase;
     font-weight: 600;
-    font-size: 1.4rem;
+    font-size: var(--fz-md);
     margin: 0 2rem;
+    ${MaxWidth1150px({ fontSize: 'var(--fz-sm)' })};
+    ${tablet({
+        fontSize: 'var(--fz-xs)',
+        fontWeight: '400',
+        margin: '0 1rem',
+    })};
+    ${mobile({ fontSize: 'var(--fz-xxs)' })};
 `;

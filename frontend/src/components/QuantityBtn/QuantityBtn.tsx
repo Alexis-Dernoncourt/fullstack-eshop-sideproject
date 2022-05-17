@@ -51,8 +51,9 @@ const QuantityBtn = ({
                 <FaMinus />
             </QtyButton>
             <QtyInput
-                type="text"
+                type="number"
                 placeholder="Quantité"
+                min={1}
                 value={quantity}
                 {...register('quantity', {
                     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {

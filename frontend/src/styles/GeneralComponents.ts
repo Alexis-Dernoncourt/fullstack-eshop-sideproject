@@ -29,7 +29,6 @@ export const MenuContainer = styled.div`
     width: max-content;
     height: max-content;
     z-index: 2;
-    ${mobile({ padding: '0 0.5rem' })};
 `;
 
 export const MenuBtnContainer = styled.button`
@@ -48,7 +47,7 @@ export const CartContainer = styled(Link)`
     position: relative;
     margin: 0 5rem;
     ${tablet({ fontSize: '1.8rem' })};
-    ${mobile({ fontSize: '1.4rem' })};
+    ${mobile({ fontSize: '1.4rem', margin: '0 2rem', width: '100%' })};
 `;
 
 export const CartTooltip = styled.span`

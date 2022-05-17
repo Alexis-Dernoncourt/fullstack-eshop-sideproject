@@ -58,8 +58,8 @@ export const SliderText = styled.h3`
     padding: 1rem 3rem;
     border-radius: 0.4rem;
     transform: rotate(-2deg);
-    ${tablet({ fontSize: '2.4rem' })};
-    ${mobile({ fontSize: '1.8rem' })};
+    ${tablet({ fontSize: '2.4rem', marginBottom: '7rem' })};
+    ${mobile({ fontSize: '1.8rem', marginBottom: '5rem' })};
 `;
 
 export const Img = styled.img`

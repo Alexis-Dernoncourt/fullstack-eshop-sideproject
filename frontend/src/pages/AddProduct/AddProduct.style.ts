@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { MaxWidth600px, mobile, tablet } from '../../styles/responsive';
 
 export const Container = styled.div`
     margin: 5rem auto;
@@ -21,6 +22,7 @@ export const InfoSpan = styled.span`
     color: var(--red);
     margin-bottom: 1rem;
     margin-left: auto;
+    ${mobile({ fontSize: 'var(--fz-xs)' })};
 `;
 
 export const Form = styled.form`
@@ -33,6 +35,7 @@ export const Form = styled.form`
     height: max-content;
     padding: 4rem;
     border-radius: 0.4rem;
+    ${tablet({ width: '100%' })};
 `;
 
 export const FormSectionContainer = styled.div`
@@ -40,10 +43,12 @@ export const FormSectionContainer = styled.div`
     justify-content: space-evenly;
     margin: 3rem 0;
     gap: 5rem;
+    ${MaxWidth600px({ flexWrap: 'wrap' })};
 `;
 
 export const FormSideSection = styled.div`
     width: 45%;
+    ${MaxWidth600px({ width: '100%' })};
 `;
 
 export const Input = styled.input`
@@ -58,6 +63,7 @@ export const Input = styled.input`
         border-color: var(--red);
         border-width: 0.2rem;
     }
+    ${mobile({ fontSize: 'var(--fz-xs)' })};
 `;
 
 export const TextArea = styled.textarea`
@@ -74,6 +80,7 @@ export const TextArea = styled.textarea`
         border-color: var(--red);
         border-width: 0.2rem;
     }
+    ${mobile({ fontSize: 'var(--fz-xs)' })};
 `;
 
 export const Label = styled.label`
@@ -114,6 +121,7 @@ export const FormBtn = styled.button`
         border-color: var(--gray);
         cursor: not-allowed;
     }
+    ${mobile({ minWidth: '20rem' })};
 `;
 
 export const AbortLink = styled(Link)`

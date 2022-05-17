@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { MaxWidth1400px, mobile, tablet } from '../../styles/responsive';
 
 export const Container = styled.div`
     display: flex;
@@ -12,6 +12,9 @@ export const Container = styled.div`
     &:hover {
         background-color: var(--xtralightgray);
     }
+    ${MaxWidth1400px({ width: '90%', height: 'auto' })};
+    ${tablet({ width: '95%', height: 'auto' })};
+    ${mobile({ width: '95%', height: 'auto' })};
 `;
 
 export const ImgContainer = styled.img`
@@ -21,6 +24,10 @@ export const ImgContainer = styled.img`
     object-fit: cover;
     width: 30%;
     height: 100%;
+    ${MaxWidth1400px({
+        maxHeight: '20rem',
+    })};
+    ${mobile({ width: '35%' })};
 `;
 
 export const ContentContainer = styled.div`
@@ -30,22 +37,26 @@ export const ContentContainer = styled.div`
     width: 70%;
     border-right: 1px solid var(--lightgray);
     cursor: default;
+    ${mobile({ width: '65%', padding: '0.5rem' })};
 `;
 
 export const ProductTitle = styled.p`
     font-weight: 700;
     font-size: var(--fz-lg);
     margin-bottom: 0;
+    ${mobile({ fontSize: 'var(--fz-sm)' })};
 `;
 
 export const ProductInfo = styled.p`
     font-size: var(--fz-sm);
+    ${mobile({ fontSize: 'var(--fz-xs)' })};
 `;
 
 export const CategoryList = styled.div`
     font-size: var(--fz-sm);
     color: var(--gray);
     padding: 0.7rem;
+    ${mobile({ fontSize: 'var(--fz-xxs)' })};
 `;
 
 export const PublicationInfo = styled(ProductInfo)`
@@ -54,6 +65,7 @@ export const PublicationInfo = styled(ProductInfo)`
     padding: 0.7rem;
     align-self: flex-end;
     margin-top: auto;
+    ${mobile({ fontSize: 'var(--fz-xxs)' })};
 `;
 
 export const ElastikContainer = styled.div`
@@ -67,6 +79,7 @@ export const BottomElastikContainer = styled(ElastikContainer)`
 
 export const EditBtnContainer = styled.div`
     width: 10%;
+    ${mobile({ width: '17%' })};
 `;
 
 export const BtnContainer = styled.div`
@@ -83,9 +96,11 @@ export const BtnContainer = styled.div`
         color: var(--white);
         background-color: var(--darkblue);
     }
+    ${mobile({ fontSize: 'var(--fz-md)' })};
 `;
 
 export const BtnSpan = styled.span`
     text-transform: uppercase;
     font-size: var(--fz-xxs);
+    ${mobile({ fontSize: '0.8rem' })};
 `;

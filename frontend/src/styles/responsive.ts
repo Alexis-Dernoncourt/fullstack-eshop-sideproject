@@ -48,6 +48,14 @@ export const MaxWidth1150px = (props: SimpleInterpolation) => {
     `;
 };
 
+export const MaxWidth1400px = (props: SimpleInterpolation) => {
+    return css`
+        @media only screen and (max-width: 1400px) {
+            ${props}
+        }
+    `;
+};
+
 export const MaxWidth1460px = (props: SimpleInterpolation) => {
     return css`
         @media only screen and (max-width: 1460px) {

@@ -1,5 +1,5 @@
 import { LogoLink } from '../../styles/GeneralComponents';
-import { Nav, NavLogo, UserBtn } from './Navbar.style';
+import { Nav, NavLogo, ProfileLink, UserBtn } from './Navbar.style';
 import {
     MenuContainer,
     MenuBtnContainer,
@@ -28,14 +28,16 @@ const Navbar = () => {
                 <MenuContainer>
                     {!authenticatedUser ? (
                         <UserBtn to="/login" className="link">
-                            Login / Register
+                            Connexion
                         </UserBtn>
                     ) : (
                         <UserBtn to="/dashboard">
                             <HiOutlineUserCircle
                                 style={{ height: '1.5em', width: '1.5em' }}
                             />
-                            <p className="link">Mon profil</p>
+                            <ProfileLink className="link">
+                                Mon profil
+                            </ProfileLink>
                         </UserBtn>
                     )}
                     <CartContainer to="/cart">
