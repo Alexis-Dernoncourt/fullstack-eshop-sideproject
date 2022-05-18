@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { mobile } from '../../styles/responsive';
+import { mobile, tablet } from '../../styles/responsive';
 
 interface IPage {
     page: string;
@@ -27,7 +27,7 @@ export const SelectInput = styled.select<IPage>`
         border-color: var(--red);
         border-width: 0.2rem;
     }
-    ${mobile({
+    ${tablet({
         fontSize: 'var(--fz-sm)',
     })};
 `;

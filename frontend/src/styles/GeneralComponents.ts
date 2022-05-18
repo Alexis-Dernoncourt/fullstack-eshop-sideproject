@@ -135,4 +135,5 @@ export const Button = styled.button`
     &:active {
         background-color: var(--darkblue);
     }
+    ${mobile({ fontSize: 'var(--fz-md)' })};
 `;

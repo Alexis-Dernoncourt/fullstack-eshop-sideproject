@@ -10,8 +10,13 @@ export const Container = styled.div`
     min-height: 50vh;
 `;
 
+export const Text = styled.p`
+    text-align: center;
+`;
+
 export const TextInfo = styled.p`
     color: var(--red);
+    text-align: center;
 `;
 
 export const TextInfoBlue = styled.p`

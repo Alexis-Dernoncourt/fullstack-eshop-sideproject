@@ -1,4 +1,8 @@
-import { Container, TextInfoBlue } from '../StripeCancel/StripeCancel.style';
+import {
+    Container,
+    TextInfoBlue,
+    Text,
+} from '../StripeCancel/StripeCancel.style';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../redux/hooks';
@@ -27,7 +31,9 @@ const StripeSuccess = () => {
         <Container>
             <h2>C'est fait !</h2>
             <TextInfoBlue>Merci pour votre commande ! 😊</TextInfoBlue>
-            <p>Vous allez être redirigé vers votre profil dans 5 secondes !</p>
+            <Text>
+                Vous allez être redirigé vers votre profil dans 5 secondes !
+            </Text>
         </Container>
     );
 };

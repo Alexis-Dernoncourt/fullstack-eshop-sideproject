@@ -1,6 +1,7 @@
 import {
     Container,
     EmptyInfoDiv,
+    CartContentContainer,
     CartItemsContainer,
     CartItem,
     DeleteCart,
@@ -11,12 +12,18 @@ import {
     Details,
     ItemTitle,
     BtnContainer,
+    SpanBtnText,
     DeleteBtnContainer,
     UpdateBtnContainer,
     ConfirmBtnContainer,
     AbortBtnContainer,
     RightCartSection,
     FormContainer,
+    StyledH2,
+    StyledH1,
+    AlertText,
+    StyledLink,
+    InputContainer,
 } from './Cart.style';
 
 import {
@@ -37,7 +44,7 @@ import { useGetAllPublishedQuery } from '../../redux/apiSlice';
 import QuantityBtn from '../../components/QuantityBtn/QuantityBtn';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import ProductOptionsInput from '../../components/ProductOptionsInput/ProductOptionsInput';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Button } from '../../styles/GeneralComponents';
 import {
     CartProduct,
@@ -199,16 +206,18 @@ const Cart = () => {
             )}
             <Container>
                 {allItemsInCart && allItemsInCart.length > 0 ? (
-                    <>
+                    <CartContentContainer>
                         <CartItemsContainer>
                             <DeleteCart onClick={handleDeleteCart}>
                                 Vider le panier
                             </DeleteCart>
                             {allItemsInCart.map((item: CartProduct) => (
                                 <CartItem key={item.uid}>
-                                    <ImgContainer>
-                                        <ItemImg src={item.image} />
-                                    </ImgContainer>
+                                    {!updateArticle && (
+                                        <ImgContainer>
+                                            <ItemImg src={item.image} />
+                                        </ImgContainer>
+                                    )}
                                     <ContentContainer>
                                         <ItemTitle>
                                             {item.productName}
@@ -245,7 +254,7 @@ const Cart = () => {
                                                         {...register('uid')}
                                                     />
                                                     {item.couleur && (
-                                                        <Infos>
+                                                        <InputContainer>
                                                             Couleur:
                                                             <ProductOptionsInput
                                                                 register={
@@ -261,9 +270,9 @@ const Cart = () => {
                                                                 fieldName="couleur"
                                                                 page="cart"
                                                             />
-                                                        </Infos>
+                                                        </InputContainer>
                                                     )}
-                                                    <Infos>
+                                                    <InputContainer>
                                                         Taille:
                                                         <ProductOptionsInput
                                                             register={register}
@@ -277,8 +286,8 @@ const Cart = () => {
                                                             fieldName="taille"
                                                             page="cart"
                                                         />
-                                                    </Infos>
-                                                    <Infos>
+                                                    </InputContainer>
+                                                    <InputContainer>
                                                         Quantité:{' '}
                                                         <QuantityBtn
                                                             quantity={quantity}
@@ -292,7 +301,7 @@ const Cart = () => {
                                                             setValue={setValue}
                                                             page="cart"
                                                         />
-                                                    </Infos>
+                                                    </InputContainer>
                                                     <ConfirmBtnContainer
                                                         type="submit"
                                                         disabled={
@@ -301,14 +310,6 @@ const Cart = () => {
                                                                 quantity ===
                                                                     item.quantity)
                                                         }
-                                                        style={{
-                                                            backgroundColor:
-                                                                'var(--lightgray)',
-                                                            padding: '0 1.5rem',
-                                                            borderRadius:
-                                                                '1rem',
-                                                            marginLeft: '2rem',
-                                                        }}
                                                     >
                                                         OK
                                                         <MdCheck
@@ -341,7 +342,7 @@ const Cart = () => {
                                                 )
                                             }
                                         >
-                                            Supprimer
+                                            <SpanBtnText>Supprimer</SpanBtnText>
                                             <CgClose
                                                 style={{
                                                     height: '1.5em',
@@ -358,7 +359,9 @@ const Cart = () => {
                                                     )
                                                 }
                                             >
-                                                Modifier
+                                                <SpanBtnText>
+                                                    Modifier
+                                                </SpanBtnText>
                                                 <MdEdit
                                                     style={{
                                                         height: '1.5em',
@@ -374,7 +377,9 @@ const Cart = () => {
                                                         handleAbort()
                                                     }
                                                 >
-                                                    Annuler
+                                                    <SpanBtnText>
+                                                        Annuler
+                                                    </SpanBtnText>
                                                 </AbortBtnContainer>
                                             )}
                                     </BtnContainer>
@@ -382,7 +387,7 @@ const Cart = () => {
                             ))}
                         </CartItemsContainer>
                         <RightCartSection>
-                            <h2>Résumé de votre commande :</h2>
+                            <StyledH2>Résumé de votre commande :</StyledH2>
                             <div>
                                 <div style={{ marginTop: '2rem' }}>
                                     Sous-total:{' '}
@@ -390,13 +395,13 @@ const Cart = () => {
                                         price={amountOfItemsInCart()}
                                     />
                                 </div>
-                                <div>Réduction(s) : 0</div>
+                                <div>Réduction(s) : 0%</div>
                                 <div>Frais de port estimés : Gratuit</div>
                             </div>
-                            <h1 style={{ marginTop: '3rem' }}>
+                            <StyledH1 style={{ marginTop: '3rem' }}>
                                 Total:{' '}
                                 <PriceFormat price={amountOfItemsInCart()} />
-                            </h1>
+                            </StyledH1>
                             {user.authenticated ? (
                                 user.userData?.validatedAccount ? (
                                     user.userData?.adress?.city &&
@@ -411,76 +416,45 @@ const Cart = () => {
                                         </Button>
                                     ) : (
                                         <>
-                                            <p
-                                                style={{
-                                                    color: 'var(--red)',
-                                                    fontWeight: '700',
-                                                    marginTop: '3rem',
-                                                    textAlign: 'center',
-                                                }}
-                                            >
+                                            <AlertText>
                                                 Veuillez renseigner votre
                                                 adresse pour pouvoir passer
                                                 commande.
-                                            </p>
-                                            <Link
+                                            </AlertText>
+                                            <StyledLink
                                                 to="/update-adress"
                                                 className="link"
-                                                style={{
-                                                    width: 'max-content',
-                                                    margin: '1.5rem auto 2rem',
-                                                    color: 'var(--darkblue)',
-                                                }}
                                             >
                                                 Renseigner mon adresse de
                                                 livraison
-                                            </Link>
+                                            </StyledLink>
                                         </>
                                     )
                                 ) : (
                                     <>
-                                        <p
-                                            style={{
-                                                color: 'var(--red)',
-                                                fontWeight: '700',
-                                                marginTop: '3rem',
-                                                textAlign: 'center',
-                                            }}
-                                        >
+                                        <AlertText>
                                             Veuillez confirmer votre compte via
                                             l'email qui vous a été envoyé pour
                                             pouvoir passer commande. Pensez
                                             aussi à renseigner votre adresse de
                                             livraison !
-                                        </p>
-                                        <Link
+                                        </AlertText>
+                                        <StyledLink
                                             to="/update-adress"
                                             className="link"
-                                            style={{
-                                                width: 'max-content',
-                                                margin: '1.5rem auto 2rem',
-                                                color: 'var(--darkblue)',
-                                            }}
                                         >
                                             Renseigner mon adresse de livraison
-                                        </Link>
+                                        </StyledLink>
                                     </>
                                 )
                             ) : (
-                                <p
-                                    style={{
-                                        color: 'var(--red)',
-                                        fontWeight: '700',
-                                        marginTop: '3rem',
-                                        textAlign: 'center',
-                                    }}
-                                >
+                                <AlertText>
                                     Veuillez vous connecter avant de pouvoir
                                     passer commande.
-                                </p>
+                                </AlertText>
                             )}
                         </RightCartSection>
-                    </>
+                    </CartContentContainer>
                 ) : (
                     <>
                         <EmptyInfoDiv>
@@ -495,7 +469,6 @@ const Cart = () => {
                                 >
                                     <img
                                         src="https://emojipedia-us.s3.amazonaws.com/source/skype/289/man-shrugging_1f937-200d-2642-fe0f.png"
-                                        srcSet="https://emojipedia-us.s3.amazonaws.com/source/skype/289/man-shrugging_1f937-200d-2642-fe0f.png 2x"
                                         alt="Emoji haussant les épaules"
                                         width="160"
                                         height="160"
