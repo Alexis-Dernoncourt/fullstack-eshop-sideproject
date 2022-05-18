@@ -1,9 +1,14 @@
 import styled from 'styled-components';
+import { tablet } from '../../styles/responsive';
 
 export const Container = styled.div`
     display: flex;
     align-items: stretch;
     min-height: 100vh;
+    ${tablet({
+        flexDirection: 'column',
+        minHeight: 'max-content',
+    })}
 `;
 
 export const ProductsContainer = styled.div`
