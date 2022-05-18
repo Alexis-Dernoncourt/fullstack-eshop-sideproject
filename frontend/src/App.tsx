@@ -8,6 +8,7 @@ import { getRefreshToken, logoutUser } from './redux/userSlice';
 import { persistor } from './redux/store';
 import { verifyRoles } from './utils/utils';
 import { userState } from './typescript/types';
+import { useSearchParams } from 'react-router-dom';
 
 import Navbar from './components/Navbar/Navbar';
 import Home from './pages/Home/Home';
@@ -29,8 +30,13 @@ import AdminNavbar from './components/AdminNavbar/AdminNavbar';
 import ProductUpdateForm from './pages/ProductUpdateForm/ProductUpdateForm';
 import StripeSuccess from './pages/StripeSuccess/StripeSuccess';
 import StripeCancel from './pages/StripeCancel/StripeCancel';
+import ProductByCategoryList from './pages/ProductsByCategoryList/ProductsByCategoryList';
 
 const App = () => {
+    let [searchParams] = useSearchParams();
+    const category = searchParams.get('category');
+    console.log(category);
+
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const user: userState = useAppSelector((state) => state.user);
@@ -234,6 +240,10 @@ const App = () => {
                 />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/products" element={<ProductList />} />
+                <Route
+                    path={`/products/filter`}
+                    element={<ProductByCategoryList />}
+                />
                 <Route path="/products/:id" element={<Product />} />
                 <Route
                     path="/dashboard"

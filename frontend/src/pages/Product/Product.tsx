@@ -35,7 +35,7 @@ const Product = () => {
                     {categoriesArray.map((element: string, i: number) => (
                         <ProductLink
                             key={element + i}
-                            to={`/products?category=${element}`}
+                            to={`/products/filter?category=${element}`}
                             className="link"
                         >
                             {element.toUpperCase()}

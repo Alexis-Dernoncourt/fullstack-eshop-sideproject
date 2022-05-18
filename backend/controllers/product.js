@@ -3,12 +3,20 @@ const cloudinary = require('../config/cloudinatyConfig');
 //const match = require('../utils/regex');
 
 exports.getAllPublishedProducts = async (req, res) => {
+    const {category} = req.query;
     try {
-        const productData = await Product.find({ state: { $eq: {published: true} } })
+        let productData;
+        let totalProducts;
+        if (category) {
+            productData = await Product.find({ state: {$eq: {published: true}}, categories: {$regex: category} });
+            totalProducts = await Product.count({ state: {$eq: {published: true}}, categories: {$regex: category} });
+        } else {
+            productData = await Product.find({ state: {$eq: {published: true}} });
+            totalProducts = await Product.count({ state: {$eq: {published: true}} });
+        }
         if (!productData) {
             return res.status(404).json({message: 'Aucun article trouvé.. Ajoutez-en un !'})
         }
-        const totalProducts = await Product.count({ state: { $eq: {published: true} } })
         res.status(200).json({ products: productData, productsTotal: totalProducts })
     } catch (error) {
         console.log(error);

@@ -22,8 +22,23 @@ export const apiSlice = createApi({
                       ]
                     : [{ type: 'Products', id: 'LIST' }],
         }),
+        getAllPublishedByCategory: builder.query({
+            query: (category: string) => ({
+                url: `/products?category=${category}`,
+            }),
+            providesTags: (result) =>
+                result
+                    ? [
+                          { type: 'ProductsCat', id: 'CATEGORY_LIST' },
+                          ...result.products.map(({ id }: any) => ({
+                              type: 'ProductsCat',
+                              id: id,
+                          })),
+                      ]
+                    : [{ type: 'Products', id: 'LIST' }],
+        }),
         getAllProducts: builder.query({
-            query: (token) => ({
+            query: (token: string) => ({
                 url: `/products/all`,
                 headers: { Authorization: `Bearer ${token}` },
             }),
@@ -82,6 +97,7 @@ export const apiSlice = createApi({
 
 export const {
     useGetAllPublishedQuery,
+    useGetAllPublishedByCategoryQuery,
     useGetAllProductsQuery,
     useAddProductMutation,
     useDeleteProductMutation,

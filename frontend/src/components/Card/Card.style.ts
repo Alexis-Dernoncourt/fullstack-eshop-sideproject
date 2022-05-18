@@ -14,6 +14,7 @@ export const Container = styled(Link)<IPage>`
     flex-direction: column;
     align-items: center;
     position: relative;
+    height: max-content;
     width: ${(props) => (props.page === 'home' ? '40rem' : '30rem')};
     margin: ${(props) => (props.page === 'home' ? '0' : '1.5rem 3rem')};
     border-radius: 1rem;
