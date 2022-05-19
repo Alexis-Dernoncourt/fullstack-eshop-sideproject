@@ -1,5 +1,6 @@
 import styled, { keyframes, css } from 'styled-components';
 import { Link } from 'react-router-dom';
+import { mobile, tablet } from '../../styles/responsive';
 
 interface IBtn {
     open: boolean;
@@ -45,6 +46,8 @@ export const Background = styled.div<IBtn>`
     background-color: rgba(255, 255, 255, 0.4);
     ${(props) => props.open && openBackgroundMenu};
     z-index: 5;
+    ${tablet({ width: '25%' })};
+    ${mobile({ width: '8%' })};
 `;
 
 export const Container = styled.div<IBtn>`
@@ -61,6 +64,8 @@ export const Container = styled.div<IBtn>`
     background-color: rgb(45, 45, 45);
     ${(props) => props.open && openMenu};
     z-index: 50;
+    ${tablet({ width: '75%' })};
+    ${mobile({ width: '92%' })};
 `;
 
 export const ItemsMenuContainer = styled.div`
@@ -69,6 +74,8 @@ export const ItemsMenuContainer = styled.div`
     gap: 5rem;
     margin: 10rem 7rem;
     font-size: var(--fz-xl);
+    ${tablet({ fontSize: 'var(--fz-lg)', margin: '10rem 2.5rem' })};
+    ${mobile({ fontSize: 'var(--fz-sm)', margin: '10rem 1.5rem' })};
 `;
 
 export const ItemsMenuListContainer = styled.div<IMenuList>`

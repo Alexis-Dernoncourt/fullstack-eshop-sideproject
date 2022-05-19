@@ -97,7 +97,7 @@ exports.updateProduct = async (req, res) => {
     };
     const state = {published: req.body.published === 'on' ? true : false}
     const body = {...req.body, price: newPrice, ...state};
-    const taille = req.body.tailles.length > 1 ? req.body.tailles.split(',') : req.body.tailles.toArray();
+    const taille = req.body.tailles.length > 1 ? req.body.tailles.split(',') : req.body.tailles.split();
     const couleur = req.body.couleurs.split(',').map(e => e.trim());
     const bodyOptions = { taille, couleur };
 
