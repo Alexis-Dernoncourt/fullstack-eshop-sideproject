@@ -69,4 +69,5 @@ export const StyledLink = styled(Link)<ILink>`
     width: max-content;
     color: var(--darkblue);
     margin: ${(props) => (props.marginBottom ? '0 auto 2rem' : '0 auto')};
+    ${tablet({ width: 'auto' })};
 `;

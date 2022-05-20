@@ -3,7 +3,7 @@ import Widget from '../../components/Widget/Widget';
 import { Container, ProductsContainer } from '../ProductList/ProductList.style';
 import { useGetAllPublishedByCategoryQuery } from '../../redux/apiSlice';
 import { Product } from '../../typescript/types';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 const ProductByCategoryList = () => {
     let [searchParams] = useSearchParams();
@@ -13,7 +13,6 @@ const ProductByCategoryList = () => {
     const { data, isLoading, isError } = useGetAllPublishedByCategoryQuery(
         category!
     );
-    console.log(data);
 
     if (isLoading) {
         return <p style={{ width: '100%', textAlign: 'center' }}>Loading...</p>;
@@ -26,7 +25,7 @@ const ProductByCategoryList = () => {
         <Container>
             <Widget />
             <ProductsContainer>
-                {data?.products &&
+                {data.products && data.productsTotal > 0 ? (
                     data.products.map((data: Product) => (
                         <Card
                             key={data._id}
@@ -40,7 +39,31 @@ const ProductByCategoryList = () => {
                             options={data.options}
                             page="list"
                         />
-                    ))}
+                    ))
+                ) : (
+                    <div
+                        style={{
+                            width: '100%',
+                            fontSize: 'var(--fz-md)',
+                            padding: '0 1.5rem',
+                        }}
+                    >
+                        <p
+                            style={{
+                                width: '100%',
+                                textAlign: 'center',
+                                padding: '1.5rem 0',
+                                marginBottom: '4rem',
+                                color: 'darkred',
+                            }}
+                        >
+                            Il n'y a pas d'articles avec cette catégorie...
+                        </p>
+                        <Link to="/products" className="link">
+                            Retour à la liste des articles
+                        </Link>
+                    </div>
+                )}
             </ProductsContainer>
         </Container>
     );

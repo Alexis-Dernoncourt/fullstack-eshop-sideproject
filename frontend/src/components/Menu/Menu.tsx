@@ -22,6 +22,7 @@ type MenuProps = {
 };
 
 const Menu = ({ open, setToggleMenu }: MenuProps) => {
+    const pathName = '/products/filter?category=';
     return (
         <>
             <Background open={open} onClick={() => setToggleMenu(false)} />
@@ -41,19 +42,26 @@ const Menu = ({ open, setToggleMenu }: MenuProps) => {
                 </MenuContainer>
                 <ItemsMenuContainer>
                     <ItemsMenuListContainer main={true}>
-                        <MenuItem to="#">Femme</MenuItem>
-                        <MenuItem to="#">Homme</MenuItem>
-                        <MenuItem to="#">Enfant</MenuItem>
+                        <MenuItem to={`${pathName}femme`}>Femme</MenuItem>
+                        <MenuItem to={`${pathName}homme`}>Homme</MenuItem>
+                        <MenuItem to={`${pathName}enfant`}>Enfant</MenuItem>
                     </ItemsMenuListContainer>
                     <ItemsMenuListContainer main={false}>
-                        <MenuItem to="#">Vêtements</MenuItem>
-                        <MenuItem to="#">Chaussures</MenuItem>
-                        <MenuItem to="#">En solde</MenuItem>
-                        <MenuItem to="#">New !</MenuItem>
-                        <MenuItem to="#">Chemises</MenuItem>
-                        <MenuItem to="#">Pulls</MenuItem>
-                        <MenuItem to="#">Jeans</MenuItem>
-                        <MenuItem to="#">Pantalons</MenuItem>
+                        <MenuItem to={`${pathName}vetements`}>
+                            Vêtements
+                        </MenuItem>
+                        <MenuItem to={`${pathName}chaussures`}>
+                            Chaussures
+                        </MenuItem>
+                        <MenuItem to={`${pathName}solde`}>En solde</MenuItem>
+                        <MenuItem to={`${pathName}new`}>New !</MenuItem>
+                        <MenuItem to={`${pathName}chemise`}>Chemises</MenuItem>
+                        <MenuItem to={`${pathName}pull`}>Pulls</MenuItem>
+                        <MenuItem to={`${pathName}jean`}>Jeans</MenuItem>
+                        <MenuItem to={`${pathName}pantalons`}>
+                            Pantalons
+                        </MenuItem>
+                        <MenuItem to={`${pathName}ete`}>Été</MenuItem>
                     </ItemsMenuListContainer>
                 </ItemsMenuContainer>
             </Container>

@@ -3,7 +3,7 @@ import { css } from 'styled-components';
 const Variables = css`
     :root {
         // Font
-        --font-main: sans-serif;
+        --font-main: 'open sans';
         // Font size
         --fz-xxs: 1rem;
         --fz-xs: 1.2rem;

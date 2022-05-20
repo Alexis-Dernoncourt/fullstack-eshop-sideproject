@@ -29,10 +29,15 @@ export const GlobalStyles = createGlobalStyle`
     border-radius: 10px;
   }
   body {
-    //font-family: var(--font-main);
-    //background-color: var(--white);
     color: var(--black);
     //max-width: var(--max-width);
+  }
+  #root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    height: 100%;
+    font-family: var(--font-main);
   }
   ul, li, ol {
     list-style: none;

@@ -6,9 +6,11 @@ export const FooterContainer = styled.footer`
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
     height: 20rem;
     background-color: var(--black);
     color: var(--white);
+    margin-top: auto;
 `;
 
 export const FootLogo = styled(Logo)`
