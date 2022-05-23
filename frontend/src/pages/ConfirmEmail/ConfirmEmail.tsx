@@ -24,13 +24,15 @@ const ConfirmEmail = () => {
         try {
             const validEmail = await dispatch(confirmUserEmail(data));
             if (
-                validEmail.meta.requestStatus !== 'rejected' &&
-                validEmail.type !== '/auth/login/rejected' &&
-                validEmail.type !== '/auth/login/fulfilled'
+                validEmail.meta.requestStatus === 'fulfilled' &&
+                validEmail.type === '/user/confirm-email/fulfilled'
             ) {
                 toast.success(`${validEmail.payload.message}`);
                 navigate('/dashboard');
-            } else {
+            } else if (
+                validEmail.meta.requestStatus === 'rejected' &&
+                validEmail.type === '/user/confirm-email/rejected'
+            ) {
                 const errorMessage = `${validEmail}`;
                 throw new Error(errorMessage);
             }
