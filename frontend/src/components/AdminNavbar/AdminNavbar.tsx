@@ -11,19 +11,18 @@ import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../../redux/userSlice';
 import { persistor } from '../../redux/store';
 import toast from 'react-hot-toast';
+import { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import Modal from '../Modal/Modal';
 
 const AdminNavbar = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const [showModal, setShowModal] = useState(false);
+    const [confirmLogout, setConfirmLogout] = useState(false);
 
-    const handleLogout = async (
-        e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-    ) => {
-        e.preventDefault();
+    const handleLogout = async () => {
         try {
-            const confirmLogout = window.confirm(
-                'Voulez-vous vraiment vous déconnecter ?'
-            );
             if (confirmLogout) {
                 const logout = await dispatch(logoutUser());
                 if (
@@ -41,6 +40,10 @@ const AdminNavbar = () => {
             console.log(error);
         }
     };
+
+    useEffect(() => {
+        handleLogout();
+    }, [confirmLogout]);
 
     return (
         <Container>
@@ -76,7 +79,7 @@ const AdminNavbar = () => {
                         }}
                     />
                 </BtnContainer>
-                <BtnContainer to="#logout" onClick={(e) => handleLogout(e)}>
+                <BtnContainer to="#logout" onClick={() => setShowModal(true)}>
                     <span>Déconnexion</span>
                     <RiLogoutBoxRLine
                         style={{
@@ -87,6 +90,17 @@ const AdminNavbar = () => {
                     />
                 </BtnContainer>
             </LinksContainer>
+            {showModal &&
+                ReactDOM.createPortal(
+                    <Modal
+                        modalText="Voulez-vous vraiment vous déconnecter ?"
+                        ModalDangerInfo="Vous devrez vous reconnecter la prochaine fois"
+                        validTextBtn="OK"
+                        setShowModal={setShowModal}
+                        setConfirmAction={setConfirmLogout}
+                    />,
+                    document.body
+                )}
         </Container>
     );
 };

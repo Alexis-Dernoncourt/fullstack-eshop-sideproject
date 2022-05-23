@@ -22,8 +22,14 @@ import {
     useDeleteProductMutation,
 } from '../../redux/apiSlice';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import Modal from '../../components/Modal/Modal';
 
 const AdminProductList = () => {
+    const [showModal, setShowModal] = useState(false);
+    const [productId, setProductId] = useState('');
+    const [confirmDeleteArticle, setConfirmDeleteArticle] = useState(false);
     const user: {
         userData: User;
         status: string;
@@ -36,24 +42,11 @@ const AdminProductList = () => {
     const { data, isLoading, isError } = useGetAllProductsQuery(token);
     const [deleteProduct] = useDeleteProductMutation();
 
-    if (isLoading) {
-        return <p style={{ width: '100%', textAlign: 'center' }}>Loading...</p>;
-    }
-
-    if (isError) {
-        return (
-            <p style={{ width: '100%', textAlign: 'center' }}>
-                Il y a eu une erreur...
-            </p>
-        );
-    }
+    console.log(productId);
 
     const handleDelete = async (id: string) => {
         try {
-            const confirmDelete = window.confirm(
-                'Voulez-vous vraiment supprimer cet article ? Attention: cette action est définitive...'
-            );
-            if (confirmDelete) {
+            if (confirmDeleteArticle) {
                 const data = {
                     id,
                     token,
@@ -65,6 +58,31 @@ const AdminProductList = () => {
             console.log(error);
         }
     };
+
+    const handleDeleteProduct = (uid: string) => {
+        setProductId(uid);
+        setShowModal(true);
+    };
+
+    useEffect(() => {
+        handleDelete(productId);
+    }, [showModal, confirmDeleteArticle]);
+
+    useEffect(() => {
+        setProductId('');
+    }, []);
+
+    if (isLoading) {
+        return <p style={{ width: '100%', textAlign: 'center' }}>Loading...</p>;
+    }
+
+    if (isError) {
+        return (
+            <p style={{ width: '100%', textAlign: 'center' }}>
+                Il y a eu une erreur...
+            </p>
+        );
+    }
 
     return (
         <>
@@ -124,7 +142,7 @@ const AdminProductList = () => {
                                 </BtnContainer>
                             </Link>
                             <BtnContainer
-                                onClick={() => handleDelete(product._id)}
+                                onClick={() => handleDeleteProduct(product._id)}
                             >
                                 <MdDeleteForever
                                     style={{
@@ -137,6 +155,19 @@ const AdminProductList = () => {
                         </EditBtnContainer>
                     </Container>
                 ))}
+            {showModal &&
+                productId &&
+                productId !== '' &&
+                ReactDOM.createPortal(
+                    <Modal
+                        modalText="Voulez-vous vraiment supprimer cet article ?"
+                        ModalDangerInfo="Attention, cette action est irréversible"
+                        validTextBtn="OK"
+                        setShowModal={setShowModal}
+                        setConfirmAction={setConfirmDeleteArticle}
+                    />,
+                    document.body
+                )}
         </>
     );
 };

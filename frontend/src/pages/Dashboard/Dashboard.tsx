@@ -17,8 +17,13 @@ import { persistor } from '../../redux/store';
 import toast from 'react-hot-toast';
 import { verifyRoles } from '../../utils/utils';
 import { User } from '../../typescript/types';
+import { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import Modal from '../../components/Modal/Modal';
 
 const Dashboard = () => {
+    const [showModal, setShowModal] = useState(false);
+    const [confirmLogout, setConfirmLogout] = useState(false);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const userData: User = useAppSelector(selectUser);
@@ -29,10 +34,6 @@ const Dashboard = () => {
 
     const handleLogout = async () => {
         try {
-            const confirmLogout = window.confirm(
-                'Voulez-vous vraiment vous déconnecter ? Attention, votre panier sera supprimé.'
-            );
-
             if (confirmLogout) {
                 const logout = await dispatch(logoutUser());
                 if (
@@ -46,9 +47,11 @@ const Dashboard = () => {
                         logout.payload?.message ||
                         'Vous vous êtes déconnecté !';
                     toast.success(message);
+                    setConfirmLogout(false);
                     navigate('/');
                 } else {
                     const errorMessage = `Il y a eu une erreur, veuillez réessayer.`;
+                    setConfirmLogout(false);
                     throw new Error(errorMessage);
                 }
             }
@@ -56,6 +59,10 @@ const Dashboard = () => {
             console.log(error);
         }
     };
+
+    useEffect(() => {
+        handleLogout();
+    }, [confirmLogout]);
 
     return (
         <Container>
@@ -68,23 +75,21 @@ const Dashboard = () => {
                     ! 😊
                 </TitleContainer>
                 {!isAdmin ? (
-                    <Button onClick={handleLogout}>LOGOUT</Button>
+                    <Button onClick={() => setShowModal(true)}>LOGOUT</Button>
                 ) : (
                     <>
                         <AdminInfo>
                             Vous êtes ADMINISTRATEUR et/ou ÉDITEUR
                         </AdminInfo>
-                        <Button onClick={handleLogout}>LOGOUT</Button>
+                        <Button onClick={() => setShowModal(true)}>
+                            LOGOUT
+                        </Button>
                     </>
                 )}
 
                 <InfosTitle>Vos informations :</InfosTitle>
                 <TextZone danger="">Votre email : {userData?.email}</TextZone>
-                <StyledLink
-                    marginBottom={false}
-                    to="/password-update"
-                    className="link"
-                >
+                <StyledLink mb={false} to="/password-update" className="link">
                     Modifier votre mot-de-passe
                 </StyledLink>
                 {!userData?.validatedAccount && (
@@ -131,11 +136,7 @@ const Dashboard = () => {
                             )}
                         </AdressZone>
                     )}
-                <StyledLink
-                    marginBottom={true}
-                    to="/update-adress"
-                    className="link"
-                >
+                <StyledLink mb={true} to="/update-adress" className="link">
                     {userData.adress &&
                     !userData.adress.firstName &&
                     !userData.adress.lastName &&
@@ -152,6 +153,17 @@ const Dashboard = () => {
                     Vous n'avez pas effectué de commande pour le moment..
                 </TextZone>
             </ProfilInfosContainer>
+            {showModal &&
+                ReactDOM.createPortal(
+                    <Modal
+                        modalText="Voulez-vous vraiment vous déconnecter ?"
+                        ModalDangerInfo="Attention, votre panier sera également supprimé"
+                        validTextBtn="OK"
+                        setShowModal={setShowModal}
+                        setConfirmAction={setConfirmLogout}
+                    />,
+                    document.body
+                )}
         </Container>
     );
 };

@@ -34,7 +34,7 @@ import {
     updateCartItem,
     deleteCartData,
 } from '../../redux/cartSlice';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 import PriceFormat from '../../components/PriceFormat/PriceFormat';
 import { CgClose } from 'react-icons/cg';
@@ -53,10 +53,12 @@ import {
     ProductUpdateType,
     userState,
 } from '../../typescript/types';
+import ReactDOM from 'react-dom';
+import Modal from '../../components/Modal/Modal';
 
 const Cart = () => {
-    const sleep = (ms: number) =>
-        new Promise((resolve) => setTimeout(resolve, ms));
+    // const sleep = (ms: number) =>
+    //     new Promise((resolve) => setTimeout(resolve, ms));
     const dispatch = useAppDispatch();
     const { pathname } = useLocation();
     const { data, isLoading, isError } = useGetAllPublishedQuery('Products');
@@ -72,25 +74,27 @@ const Cart = () => {
         formState: { errors, isDirty, isSubmitting, isValid },
     } = useForm<ProductUpdateType>({ mode: 'onChange' });
 
-    //const [confirmModal, setConfirmModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [productId, setProductId] = useState('');
+    const [confirmDeleteArticle, setConfirmDeleteArticle] = useState(false);
+    const [deleteCart, setDeleteCart] = useState(false);
+    const [deleteCartConfirm, setDeleteCartConfirm] = useState(false);
     const allItemsInCart: ProductItems = useAppSelector(selectAllCartItems);
     const user: userState = useAppSelector((state) => state.user);
     const token = user?.userData?.accessToken;
 
     const handleDeleteProductFromCart = (data: string) => {
-        const confirmDelete = window.confirm(
-            'Voulez-vous vraiment supprimer cet article de votre panier ?'
-        );
-        if (confirmDelete) {
+        if (confirmDeleteArticle) {
             dispatch(MadeCartLoading());
-            //await sleep(2000);
             try {
                 dispatch(deleteProduct(data));
             } catch (error) {
                 console.log('errrorrrr');
+                setConfirmDeleteArticle(false);
             } finally {
                 dispatch(MadeCartIdle());
                 toast.success('Article supprimé du panier !');
+                setConfirmDeleteArticle(false);
             }
         }
     };
@@ -108,25 +112,48 @@ const Cart = () => {
         setQuantity(1);
     };
 
+    const handleDelete = () => {
+        setDeleteCart(true);
+        setShowModal(true);
+    };
+
+    const handleDeleteProduct = (uid: string) => {
+        setProductId(uid);
+        setShowModal(true);
+    };
+
     const handleDeleteCart = async () => {
-        const deleteCartConfirm = window.confirm(
-            'Voulez-vous vraiment supprimer votre panier ?'
-        );
         if (deleteCartConfirm) {
             dispatch(MadeCartLoading());
-            await sleep(2000);
             try {
                 dispatch(deleteCartData());
             } catch (error) {
                 console.log('errrorrrr');
+                setDeleteCart(false);
             } finally {
                 dispatch(MadeCartIdle());
                 toast.success('Votre panier a bien été supprimé.');
                 reset();
                 setUpdateArticle(false);
+                setDeleteCart(false);
             }
         }
     };
+
+    useEffect(() => {
+        handleDeleteCart();
+        return () => {
+            deleteCart && setDeleteCart(false);
+        };
+    }, [showModal, deleteCartConfirm]);
+
+    useEffect(() => {
+        handleDeleteProductFromCart(productId);
+    }, [showModal, confirmDeleteArticle]);
+
+    useEffect(() => {
+        setProductId('');
+    }, []);
 
     const onSubmit: SubmitHandler<ProductUpdateType> = (
         data: ProductUpdateType
@@ -208,7 +235,7 @@ const Cart = () => {
                 {allItemsInCart && allItemsInCart.length > 0 ? (
                     <CartContentContainer>
                         <CartItemsContainer>
-                            <DeleteCart onClick={handleDeleteCart}>
+                            <DeleteCart onClick={handleDelete}>
                                 Vider le panier
                             </DeleteCart>
                             {allItemsInCart.map((item: CartProduct) => (
@@ -337,9 +364,7 @@ const Cart = () => {
                                     <BtnContainer>
                                         <DeleteBtnContainer
                                             onClick={() =>
-                                                handleDeleteProductFromCart(
-                                                    item.uid
-                                                )
+                                                handleDeleteProduct(item.uid)
                                             }
                                         >
                                             <SpanBtnText>Supprimer</SpanBtnText>
@@ -454,6 +479,32 @@ const Cart = () => {
                                 </AlertText>
                             )}
                         </RightCartSection>
+                        {showModal &&
+                            deleteCart &&
+                            ReactDOM.createPortal(
+                                <Modal
+                                    modalText="Voulez-vous vraiment supprimer votre panier ?"
+                                    ModalDangerInfo="Cette action est irréversible"
+                                    validTextBtn="OK"
+                                    setShowModal={setShowModal}
+                                    setConfirmAction={setDeleteCartConfirm}
+                                />,
+                                document.body
+                            )}
+                        {showModal &&
+                            productId &&
+                            productId !== '' &&
+                            !deleteCart &&
+                            ReactDOM.createPortal(
+                                <Modal
+                                    modalText="Voulez-vous vraiment supprimer cet article ?"
+                                    ModalDangerInfo="Cette action est irréversible"
+                                    validTextBtn="OK"
+                                    setShowModal={setShowModal}
+                                    setConfirmAction={setConfirmDeleteArticle}
+                                />,
+                                document.body
+                            )}
                     </CartContentContainer>
                 ) : (
                     <>

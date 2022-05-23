@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { MinWidth950px, mobile, tablet } from '../../styles/responsive';
 
 export const Container = styled.div`
-    margin: 5rem auto;
+    margin: 5rem 0;
     display: flex;
     flex-direction: column;
     align-items: center;
