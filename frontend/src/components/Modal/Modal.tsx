@@ -16,6 +16,7 @@ interface ModalProps {
     validTextBtn: string;
     setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
     setConfirmAction: React.Dispatch<React.SetStateAction<boolean>>;
+    setAbortAction: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Modal = ({
@@ -24,9 +25,14 @@ const Modal = ({
     validTextBtn,
     setShowModal,
     setConfirmAction,
+    setAbortAction,
 }: ModalProps) => {
     const handleConfirm = () => {
         setConfirmAction(true);
+        setShowModal(false);
+    };
+    const handleCancel = () => {
+        setAbortAction && setAbortAction(false);
         setShowModal(false);
     };
     return (
@@ -42,9 +48,7 @@ const Modal = ({
                             <ConfirmBtn onClick={handleConfirm}>
                                 {validTextBtn}
                             </ConfirmBtn>
-                            <CloseBtn onClick={() => setShowModal(false)}>
-                                Annuler
-                            </CloseBtn>
+                            <CloseBtn onClick={handleCancel}>Annuler</CloseBtn>
                         </BtnContainer>
                     </ModalContent>
                 </ModalContainer>

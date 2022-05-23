@@ -78,10 +78,13 @@ const Cart = () => {
     const [productId, setProductId] = useState('');
     const [confirmDeleteArticle, setConfirmDeleteArticle] = useState(false);
     const [deleteCart, setDeleteCart] = useState(false);
+    const [deleteArticle, setDeleteArticle] = useState(false);
     const [deleteCartConfirm, setDeleteCartConfirm] = useState(false);
     const allItemsInCart: ProductItems = useAppSelector(selectAllCartItems);
     const user: userState = useAppSelector((state) => state.user);
     const token = user?.userData?.accessToken;
+
+    console.log(productId);
 
     const handleDeleteProductFromCart = (data: string) => {
         if (confirmDeleteArticle) {
@@ -90,11 +93,13 @@ const Cart = () => {
                 dispatch(deleteProduct(data));
             } catch (error) {
                 console.log('errrorrrr');
+                setDeleteArticle(false);
                 setConfirmDeleteArticle(false);
             } finally {
                 dispatch(MadeCartIdle());
                 toast.success('Article supprimé du panier !');
                 setConfirmDeleteArticle(false);
+                setDeleteArticle(false);
             }
         }
     };
@@ -119,6 +124,7 @@ const Cart = () => {
 
     const handleDeleteProduct = (uid: string) => {
         setProductId(uid);
+        setDeleteArticle(true);
         setShowModal(true);
     };
 
@@ -129,31 +135,26 @@ const Cart = () => {
                 dispatch(deleteCartData());
             } catch (error) {
                 console.log('errrorrrr');
-                setDeleteCart(false);
             } finally {
                 dispatch(MadeCartIdle());
+                setUpdateArticle(false);
                 toast.success('Votre panier a bien été supprimé.');
                 reset();
-                setUpdateArticle(false);
-                setDeleteCart(false);
             }
         }
     };
 
     useEffect(() => {
         handleDeleteCart();
-        return () => {
-            deleteCart && setDeleteCart(false);
-        };
     }, [showModal, deleteCartConfirm]);
 
     useEffect(() => {
         handleDeleteProductFromCart(productId);
-    }, [showModal, confirmDeleteArticle]);
+    }, [showModal, deleteArticle]);
 
     useEffect(() => {
         setProductId('');
-    }, []);
+    }, [deleteCart]);
 
     const onSubmit: SubmitHandler<ProductUpdateType> = (
         data: ProductUpdateType
@@ -488,13 +489,14 @@ const Cart = () => {
                                     validTextBtn="OK"
                                     setShowModal={setShowModal}
                                     setConfirmAction={setDeleteCartConfirm}
+                                    setAbortAction={setDeleteCart}
                                 />,
                                 document.body
                             )}
                         {showModal &&
                             productId &&
                             productId !== '' &&
-                            !deleteCart &&
+                            deleteArticle &&
                             ReactDOM.createPortal(
                                 <Modal
                                     modalText="Voulez-vous vraiment supprimer cet article ?"
@@ -502,6 +504,7 @@ const Cart = () => {
                                     validTextBtn="OK"
                                     setShowModal={setShowModal}
                                     setConfirmAction={setConfirmDeleteArticle}
+                                    setAbortAction={setDeleteArticle}
                                 />,
                                 document.body
                             )}

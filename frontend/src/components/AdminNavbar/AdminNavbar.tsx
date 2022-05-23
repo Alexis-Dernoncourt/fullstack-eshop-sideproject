@@ -98,6 +98,7 @@ const AdminNavbar = () => {
                         validTextBtn="OK"
                         setShowModal={setShowModal}
                         setConfirmAction={setConfirmLogout}
+                        setAbortAction={setConfirmLogout}
                     />,
                     document.body
                 )}

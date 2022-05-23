@@ -165,6 +165,7 @@ const AdminProductList = () => {
                         validTextBtn="OK"
                         setShowModal={setShowModal}
                         setConfirmAction={setConfirmDeleteArticle}
+                        setAbortAction={setConfirmDeleteArticle}
                     />,
                     document.body
                 )}
