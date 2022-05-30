@@ -51,7 +51,7 @@ import {
     Product,
     ProductItems,
     ProductUpdateType,
-    userState,
+    User,
 } from '../../typescript/types';
 import ReactDOM from 'react-dom';
 import Modal from '../../components/Modal/Modal';
@@ -85,7 +85,7 @@ const Cart = () => {
     const [deleteArticle, setDeleteArticle] = useState(false);
     const [deleteCartConfirm, setDeleteCartConfirm] = useState(false);
     const allItemsInCart: ProductItems = useAppSelector(selectAllCartItems);
-    const user: userState = useAppSelector(selectCurrentUser);
+    const user: User = useAppSelector(selectCurrentUser);
     const token: string = useAppSelector(selectCurrentToken);
 
     const handleDeleteProductFromCart = (data: string) => {
@@ -431,11 +431,11 @@ const Cart = () => {
                                 <PriceFormat price={amountOfItemsInCart()} />
                             </StyledH1>
                             {user ? (
-                                user.userData?.validatedAccount ? (
-                                    user.userData?.adress?.city &&
-                                    user.userData?.adress?.postalCode &&
-                                    user.userData?.adress?.street &&
-                                    user.userData?.adress?.streetNumber ? (
+                                user.validatedAccount ? (
+                                    user.adress?.city &&
+                                    user.adress?.postalCode &&
+                                    user.adress?.street &&
+                                    user.adress?.streetNumber ? (
                                         <Button
                                             type="button"
                                             onClick={handlePayment}
