@@ -11,7 +11,8 @@ import {
     RegisterLink,
 } from './Login.style';
 import { useAppDispatch } from '../../redux/hooks';
-import { loginUser } from '../../redux/userSlice';
+import { setCredentials } from '../../redux/auth/authSlice';
+import { useLoginMutation } from '../../redux/auth/authApiSlice';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
@@ -25,6 +26,7 @@ const Login = () => {
     const dispatch = useAppDispatch();
     const [validPassword, setValidPassword] = useState(false);
     const [validEmail, setValidEmail] = useState(false);
+    const [login, { isLoading }] = useLoginMutation();
 
     const {
         register,
@@ -42,19 +44,23 @@ const Login = () => {
             )
         ) {
             try {
-                const result: any = await dispatch(loginUser(data));
-                if (
-                    result.meta.requestStatus !== 'rejected' &&
-                    result.type !== '/auth/login/rejected'
-                ) {
-                    toast.success(`${result.payload.message}`);
-                    navigate('/dashboard');
-                } else {
-                    const errorMessage = `${result.error.message}`;
-                    throw new Error(errorMessage);
-                }
+                const result: any = await login(data).unwrap();
+                console.log(result);
+                dispatch(setCredentials({ ...result }));
+                toast.success(`${result.message}`);
+                navigate('/dashboard');
             } catch (err: any) {
                 console.log(err);
+                if (!err.originalStatus) {
+                    toast.error(`No server response...`);
+                } else if (err.response?.status === 400) {
+                    toast.error(`Missing email or password...`);
+                } else if (err.response?.status === 401) {
+                    toast.error(`Unauthorized`);
+                } else {
+                    toast.error(`Login failed...`);
+                }
+
                 toast.error(`${err.message}`);
             }
         }
@@ -149,9 +155,11 @@ const Login = () => {
                 </Label>
                 <FormBtn
                     type="submit"
-                    disabled={!validPassword || !validEmail || !isDirty}
+                    disabled={
+                        !validPassword || !validEmail || !isDirty || isLoading
+                    }
                 >
-                    Me connecter
+                    {!isLoading ? 'Me connecter' : 'Connexion..'}
                 </FormBtn>
                 <RegisterLink to="/register" className="link">
                     Pas de compte ? Inscrivez-vous !

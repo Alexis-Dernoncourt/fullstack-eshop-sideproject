@@ -10,8 +10,12 @@ import {
     FormBtn,
     RegisterLink,
 } from '../../pages/Login/Login.style';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { selectUser, updatePassword } from '../../redux/userSlice';
+import { useAppSelector } from '../../redux/hooks';
+import { useUpdatePasswordMutation } from '../../redux/user/userApiSlice';
+import {
+    selectCurrentToken,
+    selectCurrentUser,
+} from '../../redux/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { User } from '../../typescript/types';
@@ -22,16 +26,15 @@ interface FormData {
     userId: string;
 }
 
-interface DataToSend extends FormData {
-    token: string;
-}
-
 const PasswordUpdateForm = () => {
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
     const [validPassword, setValidPassword] = useState(false);
     const [validNewPassword, setValidNewPassword] = useState(false);
-    const user: User = useAppSelector(selectUser);
+    const user: User = useAppSelector(selectCurrentUser);
+    const token: string = useAppSelector(selectCurrentToken);
+    const [updatePassword, { isLoading, isError, error }] =
+        useUpdatePasswordMutation();
+    console.log(isLoading, isError, error);
 
     const {
         register,
@@ -53,24 +56,14 @@ const PasswordUpdateForm = () => {
             )
         ) {
             try {
-                const dataToSend: DataToSend = {
-                    ...data,
-                    token: user.accessToken,
+                const dataToSend = {
+                    formData: { ...data },
+                    token,
                 };
-                const result: any = await dispatch(updatePassword(dataToSend));
-                if (
-                    result.meta.requestStatus === 'fulfilled' &&
-                    result.type === '/user/updatePassword/fulfilled'
-                ) {
-                    toast.success(`${result.payload.message}`);
-                    navigate('/dashboard');
-                } else if (
-                    result.meta.requestStatus === 'rejected' &&
-                    result.type === '/user/updatePassword/rejected'
-                ) {
-                    const { message } = result.error;
-                    throw new Error(message);
-                }
+                const result = await updatePassword(dataToSend).unwrap();
+                console.log(result);
+                toast.success(`${result.message}`);
+                navigate('/dashboard');
             } catch (err) {
                 console.log('erreur..', err);
                 toast.error(`${err}`);

@@ -40,7 +40,7 @@ import PriceFormat from '../../components/PriceFormat/PriceFormat';
 import { CgClose } from 'react-icons/cg';
 import { MdEdit, MdCheck } from 'react-icons/md';
 import toast from 'react-hot-toast';
-import { useGetAllPublishedQuery } from '../../redux/apiSlice';
+import { useGetAllPublishedQuery } from '../../redux/products/productsApiSlice';
 import QuantityBtn from '../../components/QuantityBtn/QuantityBtn';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import ProductOptionsInput from '../../components/ProductOptionsInput/ProductOptionsInput';
@@ -55,13 +55,17 @@ import {
 } from '../../typescript/types';
 import ReactDOM from 'react-dom';
 import Modal from '../../components/Modal/Modal';
+import {
+    selectCurrentToken,
+    selectCurrentUser,
+} from '../../redux/auth/authSlice';
 
 const Cart = () => {
     // const sleep = (ms: number) =>
     //     new Promise((resolve) => setTimeout(resolve, ms));
     const dispatch = useAppDispatch();
     const { pathname } = useLocation();
-    const { data, isLoading, isError } = useGetAllPublishedQuery('Products');
+    const { data } = useGetAllPublishedQuery('Products');
     const { status } = useAppSelector((state) => state.shoppingAppCart);
     const [updateArticle, setUpdateArticle] = useState(false);
     const [articleToUpdate, setArticleToUpdate] = useState('');
@@ -81,10 +85,8 @@ const Cart = () => {
     const [deleteArticle, setDeleteArticle] = useState(false);
     const [deleteCartConfirm, setDeleteCartConfirm] = useState(false);
     const allItemsInCart: ProductItems = useAppSelector(selectAllCartItems);
-    const user: userState = useAppSelector((state) => state.user);
-    const token = user?.userData?.accessToken;
-
-    console.log(productId);
+    const user: userState = useAppSelector(selectCurrentUser);
+    const token: string = useAppSelector(selectCurrentToken);
 
     const handleDeleteProductFromCart = (data: string) => {
         if (confirmDeleteArticle) {
@@ -133,13 +135,13 @@ const Cart = () => {
             dispatch(MadeCartLoading());
             try {
                 dispatch(deleteCartData());
+                toast.success('Votre panier a bien été supprimé.');
+                reset();
             } catch (error) {
                 console.log('errrorrrr');
             } finally {
                 dispatch(MadeCartIdle());
                 setUpdateArticle(false);
-                toast.success('Votre panier a bien été supprimé.');
-                reset();
             }
         }
     };
@@ -428,7 +430,7 @@ const Cart = () => {
                                 Total:{' '}
                                 <PriceFormat price={amountOfItemsInCart()} />
                             </StyledH1>
-                            {user.authenticated ? (
+                            {user ? (
                                 user.userData?.validatedAccount ? (
                                     user.userData?.adress?.city &&
                                     user.userData?.adress?.postalCode &&

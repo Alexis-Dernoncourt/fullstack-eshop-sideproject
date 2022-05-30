@@ -10,10 +10,9 @@ import {
     FormBtn,
     RegisterLink,
 } from '../Login/Login.style';
-import { useAppDispatch } from '../../redux/hooks';
-import { registerUser } from '../../redux/userSlice';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import axiosConfig from '../../utils/axiosConfig';
 
 type FormData = {
     email: string;
@@ -22,7 +21,6 @@ type FormData = {
 
 const Register = () => {
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
     const [validPassword, setValidPassword] = useState(false);
     const [validEmail, setValidEmail] = useState(false);
 
@@ -42,21 +40,22 @@ const Register = () => {
             )
         ) {
             try {
-                const result = await dispatch(registerUser(data));
-                if (
-                    result.meta.requestStatus === 'fulfilled' &&
-                    result.type === '/auth/register/fulfilled'
-                ) {
+                const response = await axiosConfig.post(
+                    `/auth/signup`,
+                    { data },
+                    {
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+                if (response && response.data) {
                     toast.success(
-                        `${result.payload.message}. Vous pouvez vous connecter.`
+                        `${response.data.message}. Vous pouvez vous connecter.`
                     );
                     navigate('/login');
-                } else if (
-                    result.meta.requestStatus === 'rejected' &&
-                    result.type === '/auth/register/rejected'
-                ) {
-                    const errorMessage = `Il y a eu une erreur...`;
-                    throw new Error(errorMessage);
+                    return response.data;
                 }
             } catch (err: any) {
                 console.log('erreur..', err);

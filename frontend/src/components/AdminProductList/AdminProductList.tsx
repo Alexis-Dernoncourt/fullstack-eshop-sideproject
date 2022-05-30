@@ -15,34 +15,26 @@ import {
 } from './AdminProductList.style';
 import { MdCreate, MdDeleteForever } from 'react-icons/md';
 import { useAppSelector } from '../../redux/hooks';
-import { User, Product } from '../../typescript/types';
+import { Product } from '../../typescript/types';
 import toast from 'react-hot-toast';
 import {
     useGetAllProductsQuery,
     useDeleteProductMutation,
-} from '../../redux/apiSlice';
+} from '../../redux/products/productsApiSlice';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Modal from '../../components/Modal/Modal';
+import { selectCurrentToken } from '../../redux/auth/authSlice';
 
 const AdminProductList = () => {
     const [showModal, setShowModal] = useState(false);
     const [productId, setProductId] = useState('');
     const [confirmDeleteArticle, setConfirmDeleteArticle] = useState(false);
-    const user: {
-        userData: User;
-        status: string;
-        pending: boolean;
-        authenticated: boolean;
-        message: string;
-        error: boolean;
-    } = useAppSelector((state) => state.user);
-    const token: string = user?.userData?.accessToken;
+    //const user = useAppSelector(selectCurrentUser);
+    const token: string = useAppSelector(selectCurrentToken);
     const { data, isLoading, isError } = useGetAllProductsQuery(token);
     const [deleteProduct] = useDeleteProductMutation();
-
-    console.log(productId);
 
     const handleDelete = async (id: string) => {
         try {

@@ -10,10 +10,15 @@ import {
     RegisterLink,
 } from '../../pages/Login/Login.style';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { selectUser, updateAdress } from '../../redux/userSlice';
+import { useUpdateAdressMutation } from '../../redux/user/userApiSlice';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { User } from '../../typescript/types';
+import {
+    selectCurrentUser,
+    selectCurrentToken,
+    setCredentials,
+} from '../../redux/auth/authSlice';
 
 interface FormData {
     firstName: string;
@@ -27,14 +32,14 @@ interface FormData {
     etage: number;
 }
 
-interface DataToSend extends FormData {
-    token: string;
-}
-
 const AdressUpdateForm = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const user: User = useAppSelector(selectUser);
+    const [updateAdress, { isLoading, isError, error }] =
+        useUpdateAdressMutation();
+    const user: User = useAppSelector(selectCurrentUser);
+    const token: string = useAppSelector(selectCurrentToken);
+    console.log(isLoading, isError, error);
 
     const {
         register,
@@ -63,29 +68,22 @@ const AdressUpdateForm = () => {
     });
 
     const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
+        console.log(data);
+
         try {
-            const dataToSend: DataToSend = {
-                ...data,
-                token: user.accessToken,
+            const dataToSend = {
+                formData: { ...data },
+                token,
             };
-            const result: any = await dispatch(updateAdress(dataToSend));
-            console.log(result);
-            if (
-                result.meta.requestStatus === 'fulfilled' &&
-                result.type === '/user/updateAdress/fulfilled'
-            ) {
-                toast.success(`${result.payload.message}`);
-                reset();
-                navigate('/dashboard');
-            } else if (
-                result.meta.requestStatus === 'rejected' &&
-                result.type === '/user/updateAdress/rejected'
-            ) {
-                const { message } = result.error;
-                throw new Error(message);
-            }
-        } catch (err) {
-            toast.error(`${err}`);
+            const result: any = await updateAdress(dataToSend).unwrap();
+            const updatedUser = { ...user, adress: result.adress };
+            dispatch(setCredentials({ user: updatedUser, accessToken: token }));
+            toast.success(`${result.message}`);
+            reset();
+            navigate('/dashboard');
+        } catch (err: any) {
+            console.log(err);
+            toast.error(`${err.data.error}`);
         }
     };
 
@@ -285,8 +283,8 @@ const AdressUpdateForm = () => {
                     )}
                 </Label>
 
-                <FormBtn type="submit" disabled={!isDirty}>
-                    Mettre à jour
+                <FormBtn type="submit" disabled={!isDirty || isLoading}>
+                    {isLoading ? 'Envoi...' : 'Mettre à jour'}
                 </FormBtn>
                 <RegisterLink to="/dashboard" className="link">
                     Annuler

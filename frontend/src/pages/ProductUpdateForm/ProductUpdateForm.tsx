@@ -18,8 +18,8 @@ import { useAppSelector } from '../../redux/hooks';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { ChangeEvent } from 'react';
-import { User } from '../../typescript/types';
-import { useUpdateProductMutation } from '../../redux/apiSlice';
+import { useUpdateProductMutation } from '../../redux/products/productsApiSlice';
+import { selectCurrentToken } from '../../redux/auth/authSlice';
 
 interface FormData {
     title: string;
@@ -39,9 +39,8 @@ const ProductUpdateForm = () => {
     const product: any = location.state;
     console.log(product);
 
-    const [updateProduct] = useUpdateProductMutation();
-    const user: { userData: User } = useAppSelector((state) => state.user);
-    const token: string = user?.userData?.accessToken;
+    const [updateProduct, { isLoading }] = useUpdateProductMutation();
+    const token: string = useAppSelector(selectCurrentToken);
 
     const {
         register,
@@ -374,8 +373,11 @@ const ProductUpdateForm = () => {
                         </FormSideSection>
                     </FormSectionContainer>
 
-                    <FormBtn type="submit" disabled={!isDirty || isSubmitting}>
-                        Modifier
+                    <FormBtn
+                        type="submit"
+                        disabled={!isDirty || isSubmitting || isLoading}
+                    >
+                        {isLoading ? 'Envoi...' : 'Modifier'}
                     </FormBtn>
                     <AbortLink to="/admin" className="link">
                         Annuler

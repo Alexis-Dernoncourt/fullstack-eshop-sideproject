@@ -12,12 +12,11 @@ import { useState } from 'react';
 import Menu from '../Menu/Menu';
 import CartTooltipTotal from '../CartTooltipTotal/CartTooltipTotal';
 import { useAppSelector } from '../../redux/hooks';
+import { selectCurrentUser } from '../../redux/auth/authSlice';
 
 const Navbar = () => {
     const [toggleMenu, setToggleMenu] = useState(false);
-    const authenticatedUser: boolean = useAppSelector(
-        (state) => state.user.authenticated
-    );
+    const user = useAppSelector(selectCurrentUser);
 
     return (
         <>
@@ -26,7 +25,7 @@ const Navbar = () => {
                     <NavLogo>Shopping App</NavLogo>
                 </LogoLink>
                 <MenuContainer>
-                    {!authenticatedUser ? (
+                    {!user ? (
                         <UserBtn to="/login" className="link">
                             Connexion
                         </UserBtn>

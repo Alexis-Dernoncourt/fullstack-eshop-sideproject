@@ -56,7 +56,7 @@ app.all('*', (req, res) => {
   if (req.accepts('html')) {
     return res.status(404).json({ message: 'Erreur 404'});
   } else if (req.accepts('json')) {
-    res.json({ "error": "404 Not Found" });
+    return res.status(404).json({ "error": "404 Not Found" });
   };
   res.sendStatus(404);
 });

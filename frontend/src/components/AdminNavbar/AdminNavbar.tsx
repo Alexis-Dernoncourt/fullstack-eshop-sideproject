@@ -8,33 +8,29 @@ import { MdCreate, MdSettings } from 'react-icons/md';
 import { RiAdminFill, RiLogoutBoxRLine } from 'react-icons/ri';
 import { useAppDispatch } from '../../redux/hooks';
 import { useNavigate } from 'react-router-dom';
-import { logoutUser } from '../../redux/userSlice';
-import { persistor } from '../../redux/store';
+//import { persistor } from '../../redux/store';
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Modal from '../Modal/Modal';
+import { logOut } from '../../redux/auth/authSlice';
+import { useLogoutMutation } from '../../redux/auth/authApiSlice';
 
 const AdminNavbar = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
     const [confirmLogout, setConfirmLogout] = useState(false);
+    const [logout] = useLogoutMutation();
 
     const handleLogout = async () => {
         try {
             if (confirmLogout) {
-                const logout = await dispatch(logoutUser());
-                if (
-                    logout.meta.requestStatus !== 'rejected' &&
-                    logout.type !== '/auth/login/rejected'
-                ) {
-                    persistor.purge();
-                    toast.success(`${logout.payload.message}`);
-                    navigate('/');
-                } else {
-                    throw new Error(`Il y a eu une erreur...`);
-                }
+                const result = await logout('').unwrap();
+                dispatch(logOut());
+                //persistor.purge();
+                toast.success(`${result.message}`);
+                navigate('/');
             }
         } catch (error) {
             console.log(error);

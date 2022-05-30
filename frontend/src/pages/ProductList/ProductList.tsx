@@ -1,7 +1,7 @@
 import Card from '../../components/Card/Card';
 import Widget from '../../components/Widget/Widget';
 import { Container, ProductsContainer } from './ProductList.style';
-import { useGetAllPublishedQuery } from '../../redux/apiSlice';
+import { useGetAllPublishedQuery } from '../../redux/products/productsApiSlice';
 import { Product } from '../../typescript/types';
 
 const ProductList = () => {

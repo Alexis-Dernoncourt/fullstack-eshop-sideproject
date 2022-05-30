@@ -9,53 +9,46 @@ import {
     StyledLink,
 } from './Dashboard.style';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { selectUser, logoutUser } from '../../redux/userSlice';
+import { useLogoutMutation } from '../../redux/auth/authApiSlice';
 import { deleteCartData, MadeCartLoading } from '../../redux/cartSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../../styles/GeneralComponents';
-import { persistor } from '../../redux/store';
 import toast from 'react-hot-toast';
 import { verifyRoles } from '../../utils/utils';
 import { User } from '../../typescript/types';
 import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Modal from '../../components/Modal/Modal';
+import { logOut, selectCurrentUser } from '../../redux/auth/authSlice';
 
 const Dashboard = () => {
     const [showModal, setShowModal] = useState(false);
     const [confirmLogout, setConfirmLogout] = useState(false);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const userData: User = useAppSelector(selectUser);
+    const userData: User = useAppSelector(selectCurrentUser);
 
     const isAdmin: boolean = userData
         ? verifyRoles(userData.userRoles, 'Admin')
         : false;
 
+    const [logout] = useLogoutMutation();
+
     const handleLogout = async () => {
         try {
             if (confirmLogout) {
-                const logout = await dispatch(logoutUser());
-                if (
-                    logout.meta.requestStatus !== 'rejected' &&
-                    logout.type !== '/auth/login/rejected'
-                ) {
-                    dispatch(MadeCartLoading());
-                    dispatch(deleteCartData());
-                    persistor.purge();
-                    const message =
-                        logout.payload?.message ||
-                        'Vous vous êtes déconnecté !';
-                    toast.success(message);
-                    setConfirmLogout(false);
-                    navigate('/');
-                } else {
-                    const errorMessage = `Il y a eu une erreur, veuillez réessayer.`;
-                    setConfirmLogout(false);
-                    throw new Error(errorMessage);
-                }
+                const result = await logout('').unwrap();
+                dispatch(logOut());
+                dispatch(MadeCartLoading());
+                dispatch(deleteCartData());
+                //persistor.purge();
+                const message = result.message || 'Vous vous êtes déconnecté !';
+                toast.success(message);
+                setConfirmLogout(false);
+                navigate('/');
             }
         } catch (error) {
+            setConfirmLogout(false);
             console.log(error);
         }
     };

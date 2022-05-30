@@ -1,14 +1,13 @@
 import Card from '../../components/Card/Card';
 import Widget from '../../components/Widget/Widget';
 import { Container, ProductsContainer } from '../ProductList/ProductList.style';
-import { useGetAllPublishedByCategoryQuery } from '../../redux/apiSlice';
+import { useGetAllPublishedByCategoryQuery } from '../../redux/products/productsApiSlice';
 import { Product } from '../../typescript/types';
 import { Link, useSearchParams } from 'react-router-dom';
 
 const ProductByCategoryList = () => {
     let [searchParams] = useSearchParams();
     const category = searchParams.get('category');
-    console.log(category);
 
     const { data, isLoading, isError } = useGetAllPublishedByCategoryQuery(
         category!

@@ -1,6 +1,6 @@
 import { Container } from './HomeCards.style';
 import Card from '../Card/Card';
-import { useGetAllPublishedQuery } from '../../redux/apiSlice';
+import { useGetAllPublishedQuery } from '../../redux/products/productsApiSlice';
 
 type HomeCardsProps = {
     _id: string;

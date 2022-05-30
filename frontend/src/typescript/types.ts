@@ -14,7 +14,6 @@ export type User = {
         appartment: false;
         etage: number;
     };
-    accessToken: string;
     refreshToken: string;
     validatedAccount: Boolean;
     userRoles: { User: number; Editor?: number; Admin?: number };

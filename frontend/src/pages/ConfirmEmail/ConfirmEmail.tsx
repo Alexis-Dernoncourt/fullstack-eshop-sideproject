@@ -1,14 +1,22 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { confirmUserEmail, selectUser } from '../../redux/userSlice';
+import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 import toast from 'react-hot-toast';
 import { User } from '../../typescript/types';
+import {
+    selectCurrentToken,
+    selectCurrentUser,
+    setCredentials,
+} from '../../redux/auth/authSlice';
+import { useConfirmUserEmailMutation } from '../../redux/user/userApiSlice';
 
 const ConfirmEmail = () => {
-    const user: User = useAppSelector(selectUser);
-    const navigate = useNavigate();
+    const user: User = useAppSelector(selectCurrentUser);
+    const token: string = useAppSelector(selectCurrentToken);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const [confirmUserEmail, { isLoading, isError, error }] =
+        useConfirmUserEmailMutation();
 
     const data: {
         userId: string;
@@ -17,25 +25,19 @@ const ConfirmEmail = () => {
     } = {
         userId: user.userId,
         username: user.username,
-        token: user.accessToken,
+        token,
     };
 
     const validateEmail = async () => {
         try {
-            const validEmail = await dispatch(confirmUserEmail(data));
-            if (
-                validEmail.meta.requestStatus === 'fulfilled' &&
-                validEmail.type === '/user/confirm-email/fulfilled'
-            ) {
-                toast.success(`${validEmail.payload.message}`);
-                navigate('/dashboard');
-            } else if (
-                validEmail.meta.requestStatus === 'rejected' &&
-                validEmail.type === '/user/confirm-email/rejected'
-            ) {
-                const errorMessage = `${validEmail}`;
-                throw new Error(errorMessage);
-            }
+            const validEmail = await confirmUserEmail(data).unwrap();
+            const updatedUser = {
+                ...user,
+                validatedAccount: true,
+            };
+            dispatch(setCredentials({ user: updatedUser, accessToken: token }));
+            toast.success(`${validEmail.message}`);
+            navigate('/dashboard');
         } catch (error) {
             console.log(error);
 

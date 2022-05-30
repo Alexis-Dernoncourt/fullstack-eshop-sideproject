@@ -1,11 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { apiSlice } from '../api/apiSlice';
 
-export const apiSlice = createApi({
-    reducerPath: 'postsApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api/' }),
-    tagTypes: ['Products', 'Product', 'LIST', 'AdminProducts', 'LIST-ADMIN'],
-    refetchOnFocus: true,
-    //refetchOnMountOrArgChange: true,
+export const productsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getAllPublished: builder.query({
             query: () => ({
@@ -23,7 +18,7 @@ export const apiSlice = createApi({
                     : [{ type: 'Products', id: 'LIST' }],
         }),
         getAllPublishedByCategory: builder.query({
-            query: (category: string) => ({
+            query: (category) => ({
                 url: `/products?category=${category}`,
             }),
             providesTags: (result) =>
@@ -38,7 +33,7 @@ export const apiSlice = createApi({
                     : [{ type: 'Products', id: 'LIST' }],
         }),
         getAllProducts: builder.query({
-            query: (token: string) => ({
+            query: (token) => ({
                 url: `/products/all`,
                 headers: { Authorization: `Bearer ${token}` },
             }),
@@ -54,7 +49,7 @@ export const apiSlice = createApi({
                     : [{ type: 'AdminProducts', id: 'LIST-ADMIN' }],
         }),
         addProduct: builder.mutation({
-            query: (data: { token: string; formData: any }) => ({
+            query: (data) => ({
                 url: `/products`,
                 method: 'POST',
                 credentials: 'include',
@@ -67,7 +62,7 @@ export const apiSlice = createApi({
             ],
         }),
         deleteProduct: builder.mutation({
-            query: (data: { token: string; id: string }) => ({
+            query: (data) => ({
                 url: `/products/${data.id}`,
                 method: 'DELETE',
                 credentials: 'include',
@@ -79,7 +74,7 @@ export const apiSlice = createApi({
             ],
         }),
         updateProduct: builder.mutation({
-            query: (data: { token: string; id: string; formData: any }) => ({
+            query: (data) => ({
                 url: `/products/${data.id}`,
                 method: 'PUT',
                 credentials: 'include',
@@ -102,4 +97,4 @@ export const {
     useAddProductMutation,
     useDeleteProductMutation,
     useUpdateProductMutation,
-} = apiSlice;
+} = productsApiSlice;

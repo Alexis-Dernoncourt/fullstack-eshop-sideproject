@@ -11,22 +11,31 @@ import {
 import storage from 'reduxjs-toolkit-persist/lib/storage';
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import cartReducer from './cartSlice';
-import userReducer from './userSlice';
-import adminReducer from './adminSlice';
-import { apiSlice } from './apiSlice';
+
+import { apiSlice } from './api/apiSlice';
+import authReducer from './auth/authSlice';
+
+// export const store = configureStore({
+//     reducer: {
+//         [apiSlice.reducerPath]: apiSlice.reducer,
+//         auth: authReducer,
+//     },
+//     middleware: (getDefaultMiddleware) =>
+//         getDefaultMiddleware().concat(apiSlice.middleware),
+//     devTools: true,
+// });
 
 const persistConfig = {
-    key: 'authApp',
+    key: 'authAppCart',
     version: 1,
     storage: storage,
-    blacklist: [apiSlice.reducerPath],
+    blacklist: [apiSlice.reducerPath, 'auth'],
 };
 
 const reducers = combineReducers({
     shoppingAppCart: cartReducer,
-    user: userReducer,
-    admin: adminReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
+    auth: authReducer,
 });
 
 const _persistedReducer = persistReducer(persistConfig, reducers);

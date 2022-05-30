@@ -79,9 +79,9 @@ exports.login = async (req, res) => {
           email: user.email,
           adress: user.adress,
           userRoles: roles,
-          accessToken,
           validatedAccount: user.validatedAccount,
         },
+        accessToken,
         message: `Bienvenue ${user.adress.firstName ? user.adress.firstName : user.username} !`
       });
     } else {
@@ -118,7 +118,17 @@ exports.refreshToken = async (req, res) => {
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: '5m' }
       );
-      res.json({accessToken: accessToken});
+      //save new refresh token ?
+      const {username, email, adress, validatedAccount,  } = foundUser;
+      const user = {
+        userId: foundUser._id,
+        username,
+        email,
+        adress,
+        userRoles: Object.values(foundUser.roles),
+        validatedAccount,
+      };
+      res.json({accessToken: accessToken, user});
     }
   );
 };
@@ -198,7 +208,7 @@ exports.modifyPassword = async (req, res) => {
     if (error.kind === 'ObjectId' && error.name === 'CastError') {
       return res.status(404).json({ message: 'Identifiant inconnu ou incorrect. Veuillez vérifier votre requête puis réessayer.' });
     }
-    res.status(400).json({ erreur: error });
+    res.status(400).json({ erreur: error.message });
   };
 };
 

@@ -17,8 +17,9 @@ import { useAppSelector } from '../../redux/hooks';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { ChangeEvent } from 'react';
-import { User } from '../../typescript/types';
-import { useAddProductMutation } from '../../redux/apiSlice';
+//import { User } from '../../typescript/types';
+import { useAddProductMutation } from '../../redux/products/productsApiSlice';
+import { selectCurrentToken } from '../../redux/auth/authSlice';
 
 interface FormData {
     title: string;
@@ -35,8 +36,8 @@ interface FormData {
 const AddProduct = () => {
     const navigate = useNavigate();
     const [addProduct] = useAddProductMutation();
-    const user: { userData: User } = useAppSelector((state) => state.user);
-    const token: string = user?.userData?.accessToken;
+    //const user: User = useAppSelector(selectCurrentUser);
+    const token: string = useAppSelector(selectCurrentToken);
 
     const {
         register,
