@@ -9,7 +9,7 @@ interface IText {
     danger: string;
 }
 interface ILink {
-    mb: boolean;
+    mb: string;
 }
 
 export const Container = styled.div`
@@ -68,6 +68,6 @@ export const AdressZone = styled.div`
 export const StyledLink = styled(Link)<ILink>`
     width: max-content;
     color: var(--darkblue);
-    margin: ${(props) => (props.mb ? '0 auto 2rem' : '0 auto')};
+    margin: ${(props) => (props.mb === 'true' ? '0 auto 2rem' : '0 auto')};
     ${tablet({ width: 'auto' })};
 `;

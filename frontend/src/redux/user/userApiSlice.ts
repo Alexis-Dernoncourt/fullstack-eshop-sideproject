@@ -3,7 +3,7 @@ import { apiSlice } from '../api/apiSlice';
 export const userApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         updateAdress: builder.mutation({
-            query: (data) => ({
+            query: (data: { token: string; formData: object }) => ({
                 url: '/auth/update-adress',
                 method: 'POST',
                 headers: {
@@ -15,7 +15,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
             }),
         }),
         updatePassword: builder.mutation({
-            query: (data) => ({
+            query: (data: {
+                formData: {
+                    userId: string;
+                    password: string;
+                    passwordUpdate: string;
+                };
+                token: string;
+            }) => ({
                 url: `/auth/modify-password/${data.formData.userId}`,
                 method: 'POST',
                 headers: {
@@ -30,7 +37,11 @@ export const userApiSlice = apiSlice.injectEndpoints({
             }),
         }),
         confirmUserEmail: builder.mutation({
-            query: (data) => ({
+            query: (data: {
+                userId: string;
+                username: string;
+                token: string;
+            }) => ({
                 url: `/auth/confirm-email/${data.userId}/${data.username}`,
                 method: 'GET',
                 headers: {

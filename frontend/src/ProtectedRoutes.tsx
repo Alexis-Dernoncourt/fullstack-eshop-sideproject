@@ -1,10 +1,11 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { selectCurrentToken, selectCurrentUser } from './redux/auth/authSlice';
 import { useAppSelector } from './redux/hooks';
+import { User } from './typescript/types';
 import { verifyRoles } from './utils/utils';
 
 const ProtectedAdminRoutes = () => {
-    const user = useAppSelector(selectCurrentUser);
+    const user: User = useAppSelector(selectCurrentUser);
 
     return verifyRoles(user?.userRoles, 'Admin') ? (
         <Outlet />
@@ -16,7 +17,7 @@ const ProtectedAdminRoutes = () => {
 export default ProtectedAdminRoutes;
 
 export const ProtectedEditorRoutes = () => {
-    const user = useAppSelector(selectCurrentUser);
+    const user: User = useAppSelector(selectCurrentUser);
 
     return verifyRoles(user?.userRoles, 'Editor') ? (
         <Outlet />
@@ -26,12 +27,13 @@ export const ProtectedEditorRoutes = () => {
 };
 
 export const RequireAuth = () => {
-    const token = useAppSelector(selectCurrentToken);
+    const token: string = useAppSelector(selectCurrentToken);
+    const user: User = useAppSelector(selectCurrentUser);
     const location = useLocation();
 
-    return token ? (
+    return user && token ? (
         <Outlet />
     ) : (
-        <Navigate to="/" state={{ from: location }} replace />
+        <Navigate to="/" state={{ from: location.pathname }} replace />
     );
 };

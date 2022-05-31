@@ -82,7 +82,7 @@ const Dashboard = () => {
 
                 <InfosTitle>Vos informations :</InfosTitle>
                 <TextZone danger="">Votre email : {userData?.email}</TextZone>
-                <StyledLink mb={false} to="/password-update" className="link">
+                <StyledLink mb="false" to="/password-update" className="link">
                     Modifier votre mot-de-passe
                 </StyledLink>
                 {!userData?.validatedAccount && (
@@ -129,7 +129,7 @@ const Dashboard = () => {
                             )}
                         </AdressZone>
                     )}
-                <StyledLink mb={true} to="/update-adress" className="link">
+                <StyledLink mb="true" to="/update-adress" className="link">
                     {userData.adress &&
                     !userData.adress.firstName &&
                     !userData.adress.lastName &&

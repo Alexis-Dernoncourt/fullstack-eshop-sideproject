@@ -75,3 +75,8 @@ export type AdminData = {
     message: string;
     error: boolean;
 };
+
+export interface ILogin {
+    email: string;
+    password: string;
+}

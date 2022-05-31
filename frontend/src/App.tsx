@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { GlobalStyles } from './styles/GlobalStyles';
-import { useAppSelector } from './redux/hooks';
+import { useAppDispatch, useAppSelector } from './redux/hooks';
 import { verifyRoles } from './utils/utils';
 
 import Navbar from './components/Navbar/Navbar';
@@ -26,15 +26,53 @@ import StripeSuccess from './pages/StripeSuccess/StripeSuccess';
 import StripeCancel from './pages/StripeCancel/StripeCancel';
 import ProductByCategoryList from './pages/ProductsByCategoryList/ProductsByCategoryList';
 
-import { selectCurrentUser, selectCurrentToken } from './redux/auth/authSlice';
+import {
+    selectCurrentUser,
+    selectCurrentToken,
+    setCredentials,
+} from './redux/auth/authSlice';
+import { useEffect } from 'react';
+import axiosConfig from './utils/axiosConfig';
+import { User } from './typescript/types';
 
 const App = () => {
-    const user = useAppSelector(selectCurrentUser);
-    const token = useAppSelector(selectCurrentToken);
+    const user: User = useAppSelector(selectCurrentUser);
+    const token: string = useAppSelector(selectCurrentToken);
+    const dispatch = useAppDispatch();
 
     const isAdmin: boolean = user
         ? verifyRoles(user.userRoles, 'Admin')
         : false;
+
+    useEffect(() => {
+        if (!user) {
+            const controller = new AbortController();
+            const getUser = async () => {
+                try {
+                    const userData = await axiosConfig.get('/auth/refresh', {
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        withCredentials: true,
+                        signal: controller.signal,
+                    });
+                    console.log(userData);
+
+                    if (userData.request.status === 200) {
+                        dispatch(setCredentials({ ...userData.data }));
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+            getUser();
+
+            return () => {
+                controller.abort();
+            };
+        }
+    }, [user]);
 
     return (
         <>
@@ -44,8 +82,8 @@ const App = () => {
             <Navbar />
             <Toaster
                 toastOptions={{
-                    duration: 4000,
-                    position: 'top-center',
+                    duration: 3000,
+                    position: 'bottom-center',
                     style: {
                         boxShadow: '0px 0px 25px black',
                         padding: '16px',
@@ -60,7 +98,10 @@ const App = () => {
                     path="/register"
                     element={!user ? <Register /> : <Navigate to="/" />}
                 />
-                <Route path="/login" element={<Login />} />
+                <Route
+                    path="/login"
+                    element={!user ? <Login /> : <Navigate to="/dashboard" />}
+                />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/products" element={<ProductList />} />
                 <Route
@@ -69,40 +110,31 @@ const App = () => {
                 />
                 <Route path="/products/:id" element={<Product />} />
                 <Route
+                    // must add condition when user persistance will be ok
                     path="/payment/success"
-                    element={user ? <StripeSuccess /> : <Navigate to="/" />}
+                    element={<StripeSuccess />}
                 />
                 <Route
+                    // must add condition when user persistance will be ok
                     path="/payment/cancel"
-                    element={user ? <StripeCancel /> : <Navigate to="/" />}
+                    element={<StripeCancel />}
                 />
                 <Route element={<RequireAuth />}>
                     <Route element={<ProtectedAdminRoutes />}>
-                        <Route
-                            path="/admin"
-                            element={user ? <AdminZone /> : <Navigate to="/" />}
-                        />
+                        <Route path="/admin" element={<AdminZone />} />
                         <Route
                             path="/admin/products/add"
-                            element={
-                                user ? <AddProduct /> : <Navigate to="/" />
-                            }
+                            element={<AddProduct />}
                         />
                         <Route
                             path="/admin/products/update"
-                            element={
-                                user ? (
-                                    <ProductUpdateForm />
-                                ) : (
-                                    <Navigate to="/" />
-                                )
-                            }
+                            element={<ProductUpdateForm />}
                         />
                     </Route>
                     <Route
                         path="/confirm-email"
                         element={
-                            user && !user?.validatedAccount ? (
+                            user && !user.validatedAccount ? (
                                 <ConfirmEmail />
                             ) : (
                                 <Navigate to="/" />
@@ -117,16 +149,14 @@ const App = () => {
                     />
                     <Route
                         path="/update-adress"
-                        element={
-                            user ? <AdressUpdateForm /> : <Navigate to="/" />
-                        }
+                        element={user && <AdressUpdateForm />}
                     />
                 </Route>
-
                 <Route
                     path="/dashboard"
                     element={user ? <Dashboard /> : <Navigate to="/login" />}
                 />
+
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
             <Footer />

@@ -18,7 +18,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
                     : [{ type: 'Products', id: 'LIST' }],
         }),
         getAllPublishedByCategory: builder.query({
-            query: (category) => ({
+            query: (category: string) => ({
                 url: `/products?category=${category}`,
             }),
             providesTags: (result) =>
@@ -33,7 +33,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
                     : [{ type: 'Products', id: 'LIST' }],
         }),
         getAllProducts: builder.query({
-            query: (token) => ({
+            query: (token: string) => ({
                 url: `/products/all`,
                 headers: { Authorization: `Bearer ${token}` },
             }),
@@ -49,7 +49,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
                     : [{ type: 'AdminProducts', id: 'LIST-ADMIN' }],
         }),
         addProduct: builder.mutation({
-            query: (data) => ({
+            query: (data: { token: string; formData: object }) => ({
                 url: `/products`,
                 method: 'POST',
                 credentials: 'include',
@@ -62,7 +62,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
             ],
         }),
         deleteProduct: builder.mutation({
-            query: (data) => ({
+            query: (data: { id: string; token: string }) => ({
                 url: `/products/${data.id}`,
                 method: 'DELETE',
                 credentials: 'include',
@@ -74,7 +74,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
             ],
         }),
         updateProduct: builder.mutation({
-            query: (data) => ({
+            query: (data: { id: string; token: string; formData: object }) => ({
                 url: `/products/${data.id}`,
                 method: 'PUT',
                 credentials: 'include',
