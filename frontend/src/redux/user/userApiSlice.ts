@@ -2,6 +2,17 @@ import { apiSlice } from '../api/apiSlice';
 
 export const userApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
+        getProfile: builder.query({
+            query: (data: { accessToken: string; userId: string }) => ({
+                url: `/auth/profile/${data.userId}`,
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${data.accessToken}`,
+                },
+            }),
+        }),
         updateAdress: builder.mutation({
             query: (data: { token: string; formData: object }) => ({
                 url: '/auth/update-adress',
@@ -55,6 +66,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useGetProfileQuery,
     useUpdateAdressMutation,
     useUpdatePasswordMutation,
     useConfirmUserEmailMutation,

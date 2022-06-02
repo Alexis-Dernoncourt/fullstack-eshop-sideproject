@@ -9,7 +9,7 @@ router.post('/logout', userCtrl.logout);
 router.get('/confirm-email/:id/:username', auth, userCtrl.confirmEmail);
 router.post('/modify-password/:id', auth, userCtrl.modifyPassword);
 router.post('/update-adress', auth, userCtrl.updateAdress);
-router.get('/refresh', userCtrl.refreshToken);
+router.get('/refresh', auth, userCtrl.refreshToken);
 router.get('/profile/:id', auth, userCtrl.profile);
 
 module.exports = router;

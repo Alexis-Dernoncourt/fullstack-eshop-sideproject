@@ -255,7 +255,16 @@ exports.profile = async (req, res) => {
 
       const userIsLoggedIn = await User.findById(req.params.id, { refreshToken: 1 });
       if (userIsLoggedIn.refreshToken !== '') {
-        res.status(200).json({ user, message: `Bienvenue sur votre profil !` });
+        const {username, email, adress, validatedAccount,  } = user;
+        const userData = {
+          userId: user._id,
+          username,
+          email,
+          adress,
+          userRoles: Object.values(user.roles),
+          validatedAccount,
+        };
+        res.status(200).json({ userData, message: `Bienvenue sur votre profil !` });
       } else {
         return res.status(401).json({
           message: 'Votre session a expirée. Veuillez vous reconnecter.'
