@@ -42,7 +42,14 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
 
 export const apiSlice = createApi({
     reducerPath: 'eshopApi',
-    tagTypes: ['Products', 'Product', 'LIST', 'AdminProducts', 'LIST-ADMIN'],
+    tagTypes: [
+        'Products',
+        'Product',
+        'LIST',
+        'AdminProducts',
+        'LIST-ADMIN',
+        'User',
+    ],
     refetchOnFocus: true,
     //refetchOnMountOrArgChange: true,
     baseQuery: baseQueryWithReauth,

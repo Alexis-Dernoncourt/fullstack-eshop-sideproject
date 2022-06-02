@@ -10,7 +10,6 @@ import axiosConfig from './utils/axiosConfig';
 import { useLogoutMutation } from './redux/auth/authApiSlice';
 
 const PersistLogin = () => {
-    console.log('refresh coucou');
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const token: string = useAppSelector(selectCurrentToken);
@@ -35,10 +34,7 @@ const PersistLogin = () => {
                 }
             } catch (error: any) {
                 console.log(error);
-                if (
-                    error.response.status === 403 ||
-                    error.response.status === 401
-                ) {
+                if (error.response.status === 403) {
                     const result = await logout('').unwrap();
                     console.log(result);
                     dispatch(logOut());

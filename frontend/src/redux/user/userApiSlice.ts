@@ -12,6 +12,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                     Authorization: `Bearer ${data.accessToken}`,
                 },
             }),
+            providesTags: ['User'],
         }),
         updateAdress: builder.mutation({
             query: (data: { token: string; formData: object }) => ({
@@ -24,6 +25,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 },
                 body: data.formData,
             }),
+            invalidatesTags: ['User'],
         }),
         updatePassword: builder.mutation({
             query: (data: {
@@ -46,6 +48,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                     passwordUpdate: data.formData.passwordUpdate,
                 },
             }),
+            invalidatesTags: ['User'],
         }),
         confirmUserEmail: builder.mutation({
             query: (data: {
@@ -61,6 +64,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                     Authorization: `Bearer ${data.token}`,
                 },
             }),
+            invalidatesTags: ['User'],
         }),
     }),
 });

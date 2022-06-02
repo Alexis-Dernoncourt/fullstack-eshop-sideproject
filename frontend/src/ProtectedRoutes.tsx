@@ -28,12 +28,11 @@ export const ProtectedEditorRoutes = () => {
 
 export const RequireAuth = () => {
     const token: string = useAppSelector(selectCurrentToken);
-    const user: User = useAppSelector(selectCurrentUser);
     const location = useLocation();
 
-    return user && token ? (
+    return token ? (
         <Outlet />
     ) : (
-        <Navigate to="/" state={{ from: location.pathname }} replace />
+        <Navigate to="/" state={{ from: location }} replace />
     );
 };

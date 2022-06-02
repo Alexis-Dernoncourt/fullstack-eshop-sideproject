@@ -79,15 +79,10 @@ const App = () => {
                     />
                     <Route path="/products/:id" element={<Product />} />
                     <Route
-                        // must add condition when user persistance will be ok
                         path="/payment/success"
                         element={<StripeSuccess />}
                     />
-                    <Route
-                        // must add condition when user persistance will be ok
-                        path="/payment/cancel"
-                        element={<StripeCancel />}
-                    />
+                    <Route path="/payment/cancel" element={<StripeCancel />} />
                     <Route element={<RequireAuth />}>
                         <Route element={<ProtectedAdminRoutes />}>
                             <Route path="/admin" element={<AdminZone />} />
@@ -122,7 +117,7 @@ const App = () => {
                     </Route>
                 </Route>
 
-                <Route path="*" element={<Navigate to="/" />} />
+                <Route path="/*" element={<Navigate to="/" />} />
             </Routes>
             <Footer />
         </>
