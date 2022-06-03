@@ -67,4 +67,15 @@ export const GlobalStyles = createGlobalStyle`
       transition: var(--transition);
     }
   }
+  .loader {
+    animation: anim-loader 1.2s linear infinite;
+  }
+  @keyframes anim-loader {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 `;

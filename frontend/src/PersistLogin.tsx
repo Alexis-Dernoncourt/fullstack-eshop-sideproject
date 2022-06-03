@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
     logOut,
     selectCurrentToken,
@@ -8,12 +8,14 @@ import {
 import { useAppDispatch, useAppSelector } from './redux/hooks';
 import axiosConfig from './utils/axiosConfig';
 import { useLogoutMutation } from './redux/auth/authApiSlice';
+import { BiLoaderAlt } from 'react-icons/bi';
 
 const PersistLogin = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const token: string = useAppSelector(selectCurrentToken);
     const [logout] = useLogoutMutation();
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const refresh = async () => {
@@ -40,18 +42,39 @@ const PersistLogin = () => {
                     dispatch(logOut());
                     navigate('/');
                 }
+                if (error.response.status === 401) {
+                    dispatch(logOut());
+                }
+            } finally {
+                setIsLoading(false);
             }
 
             return () => {
                 controller.abort();
+                setIsLoading(false);
             };
         };
 
         //refresh();
         !token && refresh();
-    }, []);
+    }, [dispatch, logout, navigate, token]);
 
-    return <Outlet />;
+    return isLoading ? (
+        <div
+            className="loader"
+            style={{ marginTop: '10rem', textAlign: 'center' }}
+        >
+            <BiLoaderAlt
+                style={{
+                    height: '3.5em',
+                    width: '3.5em',
+                    color: 'var(--darkblue)',
+                }}
+            />
+        </div>
+    ) : (
+        <Outlet />
+    );
 };
 
 export default PersistLogin;
