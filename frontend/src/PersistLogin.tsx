@@ -6,9 +6,10 @@ import {
     setCredentials,
 } from './redux/auth/authSlice';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
-import axiosConfig from './utils/axiosConfig';
 import { useLogoutMutation } from './redux/auth/authApiSlice';
 import { BiLoaderAlt } from 'react-icons/bi';
+
+import useAxiosPrivate from './hooks/useAxiosPrivate';
 
 const PersistLogin = () => {
     const dispatch = useAppDispatch();
@@ -16,22 +17,18 @@ const PersistLogin = () => {
     const token: string = useAppSelector(selectCurrentToken);
     const [logout] = useLogoutMutation();
     const [isLoading, setIsLoading] = useState(true);
+    const axiosPrivate = useAxiosPrivate();
 
     useEffect(() => {
         const refresh = async () => {
             const controller = new AbortController();
             try {
-                const userData = await axiosConfig.get('/auth/refresh', {
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                    withCredentials: true,
+                const userData = await axiosPrivate.get('/auth/refresh', {
                     signal: controller.signal,
                 });
 
-                if (userData.request.status === 200) {
+                if (isLoading && userData.request.status === 200) {
+                    console.log('C OK');
                     dispatch(setCredentials({ ...userData.data }));
                 }
             } catch (error: any) {
