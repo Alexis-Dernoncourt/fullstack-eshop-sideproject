@@ -9,7 +9,7 @@ Backend: ExpressJS
 Frontend: ReactJS
 
 ###### LIBRAIRIES ET OUTILS UTILISÉS:
-*Typescript, Redux Toolkit, Redux Persist, RTK Query, Cloudinary, Stripe, Styled Components, React Icons, React-Hook-Form, React-Hot-Toast, React-Router-Dom v6, JWT & refresh token, Sendinblue, MongoDB & Mongoose, Bcrypt, Cors, Multer...*
+*Typescript, Redux Toolkit, Redux Persist, RTK Query, Cloudinary, Stripe, Styled Components, React Icons, React-Hook-Form, React-Hot-Toast, React-Router-Dom v6, JWT & refresh token, Axios & Axios Interceptors, Sendinblue, MongoDB & Mongoose, Bcrypt, Cors, Multer...*
 
 > Note: Le projet est toujours en cours d'amélioration.
 
