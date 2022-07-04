@@ -89,3 +89,8 @@ export const RegisterLink = styled(Link)`
     ${tablet({ fontSize: 'var(--fz-sm)' })};
     ${mobile({ fontSize: 'var(--fz-xs)' })};
 `;
+
+export const ForgotPwd = styled(RegisterLink)`
+    color: var(--gray);
+    font-weight: 500;
+`;

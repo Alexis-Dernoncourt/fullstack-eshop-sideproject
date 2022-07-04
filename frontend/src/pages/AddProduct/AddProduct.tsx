@@ -318,11 +318,13 @@ const AddProduct = () => {
                                     {...register('tailles', {
                                         required: 'Ce champs est requis.',
                                         onBlur: (e) =>
-                                            !e.target.value.match(/^[A-Z,]+$/)
+                                            !e.target.value.match(
+                                                /^[A-Z0-9,]+$/
+                                            )
                                                 ? setError('tailles', {
                                                       type: 'invalid',
                                                       message:
-                                                          "Invalide: uniquement des mots en majuscule séparés par une virgule sans espace. (Ex: 'M,L,XL')",
+                                                          "Invalide: uniquement des mots en majuscule séparés par une virgule sans espace. (Ex: 'M,L,XL' ou '41,42'...)",
                                                   })
                                                 : clearErrors('tailles'),
                                     })}

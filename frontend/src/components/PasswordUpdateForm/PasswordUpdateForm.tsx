@@ -9,6 +9,7 @@ import {
     ErrorSpan,
     FormBtn,
     RegisterLink,
+    ForgotPwd,
 } from '../../pages/Login/Login.style';
 import { useAppSelector } from '../../redux/hooks';
 import { useUpdatePasswordMutation } from '../../redux/user/userApiSlice';
@@ -187,6 +188,9 @@ const PasswordUpdateForm = () => {
                 <RegisterLink to="/dashboard" className="link">
                     Annuler
                 </RegisterLink>
+                <ForgotPwd to="/reset-password" className="link">
+                    J'ai oublié mon mot de passe
+                </ForgotPwd>
             </Form>
         </Container>
     );

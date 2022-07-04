@@ -212,6 +212,109 @@ exports.modifyPassword = async (req, res) => {
   };
 };
 
+//lost password 👈 (with token id and delai: 2h)
+exports.forgotPassword = async (req, res) => {
+  try {
+    const userEmail = req.body.email.trim();
+    console.log(userEmail);
+    if (userEmail && match.regex.mailCheck.test(userEmail)) {
+      const user = await User.findOne({ email: userEmail });
+      if (!user) return res.status(401).json({ message: 'Email et/ou mot de passe invalide(s), veuillez réessayer.' });
+
+      const resetToken = jwt.sign(
+        { id: user._id },
+        process.env.RESET_TOKEN_SECRET,
+        { expiresIn: '2h' }
+      );
+      console.log(resetToken);
+
+      const sendEmailToUser = await new SibApiV3Sdk.TransactionalEmailsApi().sendTransacEmail(
+        {
+          'to' : [{'name': user.username, 'email': userEmail}],
+          'templateId': 2,
+          'params' : {'resetToken': resetToken, userName: user.username }
+        }
+      );
+      if (!sendEmailToUser) return res.status(500).json({ message: 'Il y a eu une erreur. Veuillez réessayer.' });
+      
+      res.status(200).json({
+        message: 'Un mail vous a été envoyé. Veuillez vérifiez votre adresse e-mail afin de modifer votre mot de passe.'
+      });
+    };
+  } catch (error) {
+    console.log(error);
+    if (error.kind === 'ObjectId' && error.name === 'CastError') {
+      return res.status(404).json({ message: 'Identifiant inconnu ou incorrect. Veuillez vérifier votre requête puis réessayer.' });
+    }
+    res.status(400).json({ erreur: error });
+  };
+};
+
+exports.updatePassword = async (req, res) => {
+  try {
+    const newPassword = req.body.newPassword.trim();
+    // verify token
+    const authHeader = req.headers.authorization || req.headers.Authorization;
+    if (!authHeader?.startsWith('Bearer ')) {
+      return res.status(403).json({
+        message: 'Requête invalide.'
+      });
+    };
+    if (newPassword && match.regex.passwordCheck.test(newPassword)) {
+      const token = authHeader.split(' ')[1];
+      const verifyToken = jwt.verify(
+        token,
+        process.env.RESET_TOKEN_SECRET,
+      );
+      console.log(verifyToken);
+      // get id from token and look for user by id
+      const userId = verifyToken.id;
+      const user = await User.findById(userId);
+      if (!user) return res.status(401).json({ message: 'Données invalide(s), veuillez réessayer.' });
+      //update password
+      const newHashedPwd = await bcrypt.hash(newPassword, 10);
+      if (!newHashedPwd) return res.status(400).json({ message: `Il y a eu une erreur, veuillez réessayer.` });
+      const updatedUser = await User.findByIdAndUpdate(userId, { password: newHashedPwd });
+      if (updatedUser) {
+        const sendEmailToUser = await new SibApiV3Sdk.TransactionalEmailsApi().sendTransacEmail(
+          {
+            'to' : [{'name': user.username, 'email': user.email}],
+            'templateId': 3,
+            'params' : {userName: user.username }
+          }
+        );
+        if (!sendEmailToUser) return res.status(500).json({ message: 'Il y a eu une erreur. Veuillez réessayer.' });
+        res.status(200).json({
+          message: 'Votre mot de passe a bien été mis à jour. Un mail de confirmation vous a été envoyé.'
+        });
+      } else {
+        return res.status(400).json({ message: `Il y a eu une erreur, veuillez réessayer.` });
+      }
+    } else {
+      return res.status(403).json({
+        message: 'Requête invalide.'
+      });
+    };
+  } catch (error) {
+    //console.log(error);
+    if (error.kind === 'ObjectId' && error.name === 'CastError') {
+      return res.status(404).json({ message: 'Identifiant inconnu ou incorrect. Veuillez vérifier votre requête puis réessayer.' });
+    }
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        message: 'Requête invalide. Veuillez réessayer.'
+      });
+    } else if (error.name === "JsonWebTokenError") {
+      return res.status(403).json({
+        message: 'Votre authentification a échouée.'
+      });
+    }
+    return res.status(400).json({ erreur: error });
+  };  
+}
+
+//delete profile 👈
+
 exports.updateAdress = async (req, res) => {
   try {
     const firstName = req.body.firstName.trim();

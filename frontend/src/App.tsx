@@ -26,6 +26,8 @@ import StripeSuccess from './pages/StripeSuccess/StripeSuccess';
 import StripeCancel from './pages/StripeCancel/StripeCancel';
 import ProductByCategoryList from './pages/ProductsByCategoryList/ProductsByCategoryList';
 import PersistLogin from './PersistLogin';
+import ResetPassword from './pages/ResetPassword/ResetPassword';
+import ResetPasswordForm from './pages/ResetPassword/ResetPasswordForm';
 
 import { selectCurrentUser, selectCurrentToken } from './redux/auth/authSlice';
 import { User } from './typescript/types';
@@ -70,6 +72,11 @@ const App = () => {
                         element={
                             !user ? <Login /> : <Navigate to="/dashboard" />
                         }
+                    />
+                    <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route
+                        path="/forgot-password/:token"
+                        element={<ResetPasswordForm />}
                     />
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/products" element={<ProductList />} />

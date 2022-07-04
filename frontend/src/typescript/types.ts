@@ -19,20 +19,6 @@ export type User = {
     userRoles: { User: number; Editor?: number; Admin?: number };
 };
 
-export type userState = {
-    userData: User | null;
-    pending: Boolean | null;
-    authenticated: Boolean;
-    status: string;
-    message: string | null;
-    error: {
-        error: object;
-        meta: object;
-        type: string;
-        payload: object | string | undefined;
-    } | null;
-};
-
 export type Product = {
     _id: string;
     title: string;
@@ -67,13 +53,6 @@ export type ProductUpdateType = {
     couleur: string;
     taille: string;
     quantity: number;
-};
-
-export type AdminData = {
-    pending: boolean;
-    status: string;
-    message: string;
-    error: boolean;
 };
 
 export interface ILogin {

@@ -9,6 +9,7 @@ import {
     ErrorSpan,
     FormBtn,
     RegisterLink,
+    ForgotPwd,
 } from './Login.style';
 import { useAppDispatch } from '../../redux/hooks';
 import { setCredentials } from '../../redux/auth/authSlice';
@@ -52,16 +53,14 @@ const Login = () => {
             } catch (err: any) {
                 console.log(err);
                 if (!err.originalStatus) {
-                    toast.error(`No server response...`);
+                    console.error(`No server response...`);
                 } else if (err.response?.status === 400) {
                     toast.error(`Missing email or password...`);
                 } else if (err.response?.status === 401) {
                     toast.error(`Unauthorized`);
-                } else {
-                    toast.error(`Login failed...`);
                 }
 
-                toast.error(`${err.message}`);
+                toast.error(`${err.data.message}`);
             }
         }
     };
@@ -164,6 +163,9 @@ const Login = () => {
                 <RegisterLink to="/register" className="link">
                     Pas de compte ? Inscrivez-vous !
                 </RegisterLink>
+                <ForgotPwd to="/reset-password" className="link">
+                    J'ai oublié mon mot de passe
+                </ForgotPwd>
             </Form>
         </Container>
     );
